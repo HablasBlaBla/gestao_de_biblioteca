@@ -1,0 +1,82 @@
+<?php
+session_start();
+
+// Verifica se o professor está logado
+if (!isset($_SESSION['professor_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+require 'conn.php'; // Arquivo de conexão com o banco
+
+// Função para buscar livro na API do Google pelo ID
+function buscarLivroGoogleById($id) {
+    $url = 'https://www.googleapis.com/books/v1/volumes/' . $id;
+    $response = file_get_contents($url);
+    return json_decode($response, true);
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livros'])) {
+    $livros_selecionados = $_POST['livros'];
+
+    foreach ($livros_selecionados as $livro_id) {
+        $livro = buscarLivroGoogleById($livro_id);
+
+        $titulo = $livro['volumeInfo']['title'];
+        $autor = implode(', ', $livro['volumeInfo']['authors'] ?? []);
+        $descricao = $livro['volumeInfo']['description'] ?? 'Sem descrição';
+        $isbn = $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] ?? 'Não informado';
+        $quantidade = 1; // Defina a quantidade inicial
+
+        // Verifica se o ISBN já existe
+        $sql_check = "SELECT id FROM livros WHERE isbn = ?";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bind_param("s", $isbn);
+        $stmt_check->execute();
+        $stmt_check->store_result();
+
+        if ($stmt_check->num_rows > 0) {
+            echo "<div class='alert alert-danger'>Erro: Este ISBN já está cadastrado!</div>";
+        } else {
+            $sql = "INSERT INTO livros (titulo, autor, descricao, isbn, quantidade) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssi", $titulo, $autor, $descricao, $isbn, $quantidade);
+
+            if ($stmt->execute()) {
+                echo "<div class='alert alert-success'>Livro cadastrado com sucesso!</div>";
+            } else {
+                echo "<div class='alert alert-danger'>Erro ao cadastrar livro!</div>";
+            }
+        }
+        $stmt_check->close();
+    }
+
+    $conn->close();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Livros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center">
+                <h4>Cadastro de Livros Selecionados</h4>
+            </div>
+            <div class="card-body">
+                <a href="buscar_livros.php" class="btn btn-warning mb-3">Voltar para Buscar Livros</a>
+                <div class="alert alert-info">
+                    <p>Você está prestes a cadastrar os livros selecionados na base de dados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="dashboard.php">dashboard</a>
+</body>
+</html>
