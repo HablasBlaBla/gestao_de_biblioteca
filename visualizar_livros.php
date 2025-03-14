@@ -64,8 +64,10 @@ $result = $conn->query($sql);
                 <?php endif; ?>
             </div>
         </div>
+        <br>
+            <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+        <br>
     </div>
-    <a href="dashboard.php" class="btn btn-secondary mt-3">Voltar ao Dashboard</a>
 </body>
 </html>
 

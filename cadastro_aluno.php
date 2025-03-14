@@ -7,9 +7,28 @@ if (!isset($_SESSION['professor_id'])) {
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require 'conn.php'; // Arquivo de conexão com o banco
+require 'conn.php'; // Arquivo de conexão com o banco
 
+// Deletar aluno
+if (isset($_GET['deletar'])) {
+    $aluno_id = $_GET['deletar'];
+
+    // Deletando o aluno
+    $sql = "DELETE FROM alunos WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $aluno_id);
+
+    if ($stmt->execute()) {
+        echo "<div class='alert alert-success'>Aluno deletado com sucesso!</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Erro ao deletar aluno!</div>";
+    }
+
+    $stmt->close();
+}
+
+// Cadastro de aluno
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'];
     $serie = $_POST['serie'];
     $email = $_POST['email'];
@@ -39,8 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt_check->close();
     $stmt->close();
-    $conn->close();
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -77,9 +97,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
                 </form>
+                <br>
+                
+                <h5 class="mt-4">Lista de Alunos</h5>
+                <?php
+                // Exibindo a lista de alunos cadastrados
+                require 'conn.php';
+                $sql = "SELECT id, nome, serie, email FROM alunos";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    echo "<table class='table'>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nome</th>
+                                    <th>Série</th>
+                                    <th>Email</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>";
+
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                                <td>" . $row['id'] . "</td>
+                                <td>" . $row['nome'] . "</td>
+                                <td>" . $row['serie'] . "</td>
+                                <td>" . $row['email'] . "</td>
+                                <td>
+                                    <a href='?deletar=" . $row['id'] . "' class='btn btn-danger'>Deletar</a>
+                                </td>
+                            </tr>";
+                    }
+
+                    echo "</tbody></table>";
+                } else {
+                    echo "<p>Nenhum aluno cadastrado.</p>";
+                }
+
+                $conn->close();
+                ?>
+
+                <br>
+                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <br>
             </div>
         </div>
     </div>
-    <a href="dashboard.php">dashboard</a>
 </body>
 </html>

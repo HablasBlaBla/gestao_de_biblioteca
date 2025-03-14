@@ -1,13 +1,40 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require 'conn.php'; // Arquivo de conexão com o banco
+session_start();
+
+// Verifica se o professor está logado
+if (!isset($_SESSION['professor_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+require 'conn.php'; // Arquivo de conexão com o banco
+
+// Deletar professor
+if (isset($_POST['delete'])) {
+    $professor_id = $_POST['professor_id'];
+
+    $sql_delete = "DELETE FROM professores WHERE id = ?";
+    $stmt_delete = $conn->prepare($sql_delete);
+    $stmt_delete->bind_param("i", $professor_id);
+
+    if ($stmt_delete->execute()) {
+        echo "<div class='alert alert-success'>Professor deletado com sucesso!</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Erro ao deletar professor!</div>";
+    }
+
+    $stmt_delete->close();
+}
+
+// Cadastrar professor
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['delete'])) {
 
     $nome = $_POST['nome'];
     $email = $_POST['email'];
     $cpf = $_POST['cpf'];
-    $senha = md5($_POST['senha']); // Criptografando a senha com MD5
+    $senha = md5($_POST['senha']); // Senha criptografada
 
-    // Verifica se o email já existe
+    // Verifica se o email do professor já existe
     $sql_check = "SELECT id FROM professores WHERE email = ?";
     $stmt_check = $conn->prepare($sql_check);
     $stmt_check->bind_param("s", $email);
@@ -25,14 +52,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             echo "<div class='alert alert-success'>Professor cadastrado com sucesso!</div>";
         } else {
-            echo "<div class='alert alert-danger'>Erro ao cadastrar!</div>";
+            echo "<div class='alert alert-danger'>Erro ao cadastrar professor!</div>";
         }
     }
 
     $stmt_check->close();
     $stmt->close();
-    $conn->close();
 }
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -69,6 +97,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
                 </form>
+
+                <br>
+                <h5>Professores Cadastrados:</h5>
+                <ul class="list-group">
+                    <?php
+                    require 'conn.php'; // Requer a conexão com o banco
+
+                    $sql = "SELECT id, nome, email FROM professores";
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while($row = $result->fetch_assoc()) {
+                            echo "<li class='list-group-item d-flex justify-content-between align-items-center'>";
+                            echo $row['nome'] . " (" . $row['email'] . ")";
+                            echo "<form method='POST' class='d-inline-block' action=''>";
+                            echo "<input type='hidden' name='professor_id' value='" . $row['id'] . "'>";
+                            echo "<button type='submit' name='delete' class='btn btn-danger btn-sm'>Deletar</button>";
+                            echo "</form>";
+                            echo "</li>";
+                        }
+                    } else {
+                        echo "<li class='list-group-item'>Nenhum professor encontrado.</li>";
+                    }
+
+                    $conn->close();
+                    ?>
+                </ul>
+                <br>
+                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <br>
             </div>
         </div>
     </div>

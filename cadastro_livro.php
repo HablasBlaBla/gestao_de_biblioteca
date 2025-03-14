@@ -74,9 +74,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livros'])) {
                 <div class="alert alert-info">
                     <p>Você está prestes a cadastrar os livros selecionados na base de dados.</p>
                 </div>
+                <br>
+                    <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <br>
             </div>
         </div>
     </div>
-    <a href="dashboard.php">dashboard</a>
+    
 </body>
 </html>

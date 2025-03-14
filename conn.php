@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";  // Mude para o usuário do seu banco de dados
 $password = "";      // Senha do banco de dados
-$database = "gestao_de_biblioteca";  // Nome do banco de dados
+$database = "test";  // Nome do banco de dados
 
 $conn = new mysqli($servername, $username, $password, $database);
 

@@ -12,7 +12,7 @@ if (!isset($_SESSION['professor_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Painel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
 </head>
@@ -26,16 +26,22 @@ if (!isset($_SESSION['professor_id'])) {
                 <h4 class="text-center mb-4">Acesse as opções abaixo:</h4>
                 <ul class="list-group">
                     <li class="list-group-item">
+                        <a href="cadastro_professor.php" class="btn btn-link w-100 text-start">Cadastrar Professor</a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="cadastro_aluno.php" class="btn btn-link w-100 text-start">Cadastrar Aluno</a>
                     </li>
                     <li class="list-group-item">
                         <a href="cadastro_livro.php" class="btn btn-link w-100 text-start">Cadastrar Livro</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="cadastro_emprestimos.php" class="btn btn-link w-100 text-start">Empréstimos</a>
+                        <a href="cadastro_emprestimos.php" class="btn btn-link w-100 text-start">Criar Empréstimo</a>
                     </li>
-                    <!-- <li class="list-group-item">
-                        <a href="gerenciar_emprestimos.php" class="btn btn-link w-100 text-start">Gerenciar Empréstimos</a> -->
+                    <li class="list-group-item">
+                        <a href="gerenciar_emprestimos.php" class="btn btn-link w-100 text-start">Gerenciar Empréstimos</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="editar_livro.php" class="btn btn-link w-100 text-start">Editar Livro</a>
                     </li>
                     <li class="list-group-item">
                         <a href="visualizar_livros.php" class="btn btn-link w-100 text-start">Visualizar Livros</a>

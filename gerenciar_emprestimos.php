@@ -10,12 +10,16 @@ if (!isset($_SESSION['professor_id'])) {
 
 $professor_id = $_SESSION['professor_id'];
 
+// Obter todas as classes disponíveis para filtro
+$sql = "SELECT DISTINCT serie FROM alunos WHERE serie IS NOT NULL AND serie <> '' ORDER BY serie";
+$classes = $conn->query($sql);
+
 // Registrar empréstimo
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livro_id']) && isset($_POST['aluno_id'])) {
     $livro_id = $_POST['livro_id'];
     $aluno_id = $_POST['aluno_id'];
     $data_emprestimo = date("Y-m-d");
-    $data_devolucao = date("Y-m-d", strtotime("+7 days")); // Definindo devolução para 7 dias
+    $data_devolucao = date("Y-m-d", strtotime("+15 days")); // Devolução em 15 dias
 
     // Verificar se o livro está disponível
     $sql = "SELECT quantidade FROM livros WHERE id = ?";
@@ -23,16 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livro_id']) && isset($
     $stmt->bind_param("i", $livro_id);
     $stmt->execute();
     $stmt->bind_result($quantidade);
-    $stmt->fetch();
-    
+    if ($stmt->fetch() === null) {
+        echo "<div class='alert alert-danger'>Erro ao verificar disponibilidade do livro.</div>";
+        exit();
+    }
+    $stmt->close();
+
     if ($quantidade > 0) {
-        // Inserir novo empréstimo
-        $stmt->close();
+        // Registrar empréstimo
         $sql = "INSERT INTO emprestimos (livro_id, aluno_id, professor_id, data_emprestimo, data_devolucao) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("iiiss", $livro_id, $aluno_id, $professor_id, $data_emprestimo, $data_devolucao);
         if ($stmt->execute()) {
-            // Atualizar a quantidade do livro
+            // Atualizar quantidade do livro
             $sql = "UPDATE livros SET quantidade = quantidade - 1 WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $livro_id);
@@ -51,20 +58,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livro_id']) && isset($
 if (isset($_GET['devolver_id'])) {
     $emprestimo_id = $_GET['devolver_id'];
 
-    // Atualizar a devolução no banco
+    // Pegar o livro do empréstimo antes de deletar
     $sql = "SELECT livro_id FROM emprestimos WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $emprestimo_id);
     $stmt->execute();
     $stmt->bind_result($livro_id);
     $stmt->fetch();
-    
-    // Marcar como devolvido
+    $stmt->close();
+
+    // Deletar o empréstimo e atualizar quantidade do livro
     $sql = "DELETE FROM emprestimos WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $emprestimo_id);
     if ($stmt->execute()) {
-        // Atualizar a quantidade de livros
         $sql = "UPDATE livros SET quantidade = quantidade + 1 WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $livro_id);
@@ -76,20 +83,16 @@ if (isset($_GET['devolver_id'])) {
     $stmt->close();
 }
 
-// Obter lista de empréstimos
-$professor_id = 1; // Aqui você pode definir o ID do professor, ou obter de uma sessão, por exemplo
-
+// Buscar empréstimos do professor
 $sql = "SELECT e.id, l.titulo, a.nome, e.data_emprestimo, e.data_devolucao 
         FROM emprestimos e 
         JOIN livros l ON e.livro_id = l.id
         JOIN alunos a ON e.aluno_id = a.id
         WHERE e.professor_id = ?";
-
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $professor_id); // 'i' é para um inteiro (ID do professor)
+$stmt->bind_param('i', $professor_id);
 $stmt->execute();
 $result = $stmt->get_result();
-
 ?>
 
 <!DOCTYPE html>
@@ -99,6 +102,34 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Empréstimos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        function filtrarAlunos() {
+            var classe = document.getElementById("classeFilter").value;
+            var alunos = document.querySelectorAll("#alunoSelect option");
+            
+            alunos.forEach(function(aluno) {
+                if (classe === "" || aluno.getAttribute("data-classe") === classe) {
+                    aluno.style.display = "block";
+                } else {
+                    aluno.style.display = "none";
+                }
+            });
+        }
+
+        function buscarAluno() {
+            var searchTerm = document.getElementById("searchAluno").value.toLowerCase();
+            var alunos = document.querySelectorAll("#alunoSelect option");
+            
+            alunos.forEach(function(aluno) {
+                var nome = aluno.textContent.toLowerCase();
+                if (nome.includes(searchTerm)) {
+                    aluno.style.display = "block";
+                } else {
+                    aluno.style.display = "none";
+                }
+            });
+        }
+    </script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
@@ -111,37 +142,43 @@ $result = $stmt->get_result();
                 <h4>Registrar Novo Empréstimo</h4>
             </div>
             <div class="card-body">
-                <form method="POST" action="">
+                <form method="POST">
                     <div class="mb-3">
-                        <label for="livro_id" class="form-label">Livro</label>
+                        <label class="form-label">Livro</label>
                         <select class="form-select" name="livro_id" required>
                             <?php
-                            // Exibe todos os livros disponíveis para empréstimo
-                            $sql = "SELECT id, titulo FROM livros WHERE quantidade > 0";
-                            $livros = $conn->query($sql);
+                            $livros = $conn->query("SELECT id, titulo FROM livros WHERE quantidade > 0");
                             while ($livro = $livros->fetch_assoc()) {
                                 echo "<option value='" . $livro['id'] . "'>" . $livro['titulo'] . "</option>";
                             }
                             ?>
                         </select>
                     </div>
+
                     <div class="mb-3">
-                        <label for="aluno_id" class="form-label">Aluno</label>
-                        <select class="form-select" name="aluno_id" required>
+                        <label class="form-label">Filtrar por Classe</label>
+                        <select class="form-select" id="classeFilter" onchange="filtrarAlunos()">
+                            <option value="">Todas</option>
+                            <?php while ($classe = $classes->fetch_assoc()) { ?>
+                                <option value="<?= $classe['serie']; ?>"><?= $classe['serie']; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Aluno</label>
+                        <input type="text" class="form-control mb-2" id="searchAluno" onkeyup="buscarAluno()" placeholder="Pesquisar aluno">
+                        <select class="form-select" name="aluno_id" required id="alunoSelect">
+                            <option value="">Selecione um aluno</option>
                             <?php
-                                $sql = "SELECT id, nome_completo FROM alunos";
-                                $alunos = $conn->query($sql);
-                                
-                                if ($alunos->num_rows > 0) {
-                                    while ($aluno = $alunos->fetch_assoc()) {
-                                        echo "<option value='" . $aluno['id'] . "'>" . $aluno['nome_completo'] . "</option>";
-                                    }
-                                } else {
-                                    echo "<option value=''>Nenhum aluno encontrado</option>";
-                                }
+                            $alunos = $conn->query("SELECT id, nome, serie FROM alunos");
+                            while ($aluno = $alunos->fetch_assoc()) {
+                                echo "<option value='" . $aluno['id'] . "' data-classe='" . $aluno['serie'] . "'>" . $aluno['nome'] . "</option>";
+                            }
                             ?>
                         </select>
                     </div>
+
                     <button type="submit" class="btn btn-primary w-100">Registrar Empréstimo</button>
                 </form>
             </div>
@@ -153,6 +190,7 @@ $result = $stmt->get_result();
                 <h4>Empréstimos Registrados</h4>
             </div>
             <div class="card-body">
+                <input type="text" class="form-control mb-3" id="searchAluno" placeholder="Pesquisar aluno">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -166,17 +204,18 @@ $result = $stmt->get_result();
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()) { ?>
                             <tr>
-                                <td><?php echo $row['titulo']; ?></td>
-                                <td><?php echo $row['nome_completo']; ?></td>
-                                <td><?php echo $row['data_emprestimo']; ?></td>
-                                <td><?php echo $row['data_devolucao']; ?></td>
-                                <td>
-                                    <a href="?devolver_id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm">Devolver</a>
-                                </td>
+                                <td><?= $row['titulo']; ?></td>
+                                <td><?= $row['nome']; ?></td>
+                                <td><?= $row['data_emprestimo']; ?></td>
+                                <td><?= $row['data_devolucao']; ?></td>
+                                <td><a href="?devolver_id=<?= $row['id']; ?>" class="btn btn-danger btn-sm">Devolver</a></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
+                <br>
+                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <br>
             </div>
         </div>
 
@@ -184,4 +223,4 @@ $result = $stmt->get_result();
 </body>
 </html>
 
-<?php $conn->close(); ?>
+
