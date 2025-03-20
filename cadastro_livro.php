@@ -9,70 +9,55 @@ if (!isset($_SESSION['professor_id'])) {
 
 require 'conn.php'; // Conexão com o banco
 
-// Função para buscar livro na API do Google pelo ISBN
-function buscarLivroGoogleByISBN($isbn) {
-    $url = 'https://www.googleapis.com/books/v1/volumes?q=isbn:' . urlencode($isbn);
+// Função para buscar livros na API do Google
+function buscarLivrosGoogle($termo, $tipo = 'nome') {
+    $query = $tipo === 'isbn' ? 'isbn:' . urlencode($termo) : urlencode($termo);
+    $url = 'https://www.googleapis.com/books/v1/volumes?q=' . $query;
     $response = file_get_contents($url);
     $data = json_decode($response, true);
 
-    if (isset($data['items'][0])) {
-        return $data['items'][0];
-    }
-    return null;
+    return $data['items'] ?? [];
 }
 
-// Função para buscar livro na API do Google pelo nome
-function buscarLivroGoogleByNome($nome) {
-    $url = 'https://www.googleapis.com/books/v1/volumes?q=' . urlencode($nome);
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-
-    if (isset($data['items'])) {
-        return $data['items'];
-    }
-    return [];
+// Se for uma busca de livros
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['buscar'])) {
+    $termo_busca = trim($_POST['termo_busca']);
+    $tipo_busca = $_POST['tipo_busca'] ?? 'nome';
+    $livros_encontrados = buscarLivrosGoogle($termo_busca, $tipo_busca);
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livros'])) {
-    $livros_selecionados = $_POST['livros'];
+// Se for um cadastro de livros
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['cadastrar'])) {
+    if (!empty($_POST['livros'])) {
+        foreach ($_POST['livros'] as $livro_id) {
+            $livro_info = buscarLivrosGoogle($livro_id, 'isbn');
+            $livro = $livro_info[0] ?? null;
+            
+            if ($livro) {
+                $titulo = $livro['volumeInfo']['title'] ?? 'Sem título';
+                $autor = implode(', ', $livro['volumeInfo']['authors'] ?? ['Desconhecido']);
+                $descricao = $livro['volumeInfo']['description'] ?? 'Sem descrição';
+                $isbn = $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] ?? 'Não informado';
+                $quantidade = 1;
 
-    foreach ($livros_selecionados as $livro_id) {
-        $livro = buscarLivroGoogleByISBN($livro_id);
-
-        if ($livro) {
-            $titulo = $livro['volumeInfo']['title'] ?? 'Sem título';
-            $autor = implode(', ', $livro['volumeInfo']['authors'] ?? ['Desconhecido']);
-            $descricao = $livro['volumeInfo']['description'] ?? 'Sem descrição';
-            $isbn = $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] ?? 'Não informado';
-            $quantidade = 1; // Definindo quantidade inicial
-
-            // Verifica se o ISBN já existe no banco
-            $sql_check = "SELECT id FROM livros WHERE isbn = ?";
-            $stmt_check = $conn->prepare($sql_check);
-            $stmt_check->bind_param("s", $isbn);
-            $stmt_check->execute();
-            $stmt_check->store_result();
-
-            if ($stmt_check->num_rows > 0) {
-                echo "<div class='alert alert-warning'>O livro <strong>$titulo</strong> já está cadastrado.</div>";
-            } else {
-                // Inserindo o livro no banco
-                $sql = "INSERT INTO livros (titulo, autor, descricao, isbn, quantidade) VALUES (?, ?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssi", $titulo, $autor, $descricao, $isbn, $quantidade);
-
-                if ($stmt->execute()) {
-                    echo "<div class='alert alert-success'>Livro <strong>$titulo</strong> cadastrado com sucesso!</div>";
-                } else {
-                    echo "<div class='alert alert-danger'>Erro ao cadastrar o livro <strong>$titulo</strong>!</div>";
+                // Verifica se já existe no banco
+                $sql_check = "SELECT id FROM livros WHERE isbn = ?";
+                $stmt_check = $conn->prepare($sql_check);
+                $stmt_check->bind_param("s", $isbn);
+                $stmt_check->execute();
+                $stmt_check->store_result();
+                
+                if ($stmt_check->num_rows == 0) {
+                    // Insere no banco
+                    $sql = "INSERT INTO livros (titulo, autor, descricao, isbn, quantidade) VALUES (?, ?, ?, ?, ?)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("ssssi", $titulo, $autor, $descricao, $isbn, $quantidade);
+                    $stmt->execute();
                 }
+                $stmt_check->close();
             }
-            $stmt_check->close();
-        } else {
-            echo "<div class='alert alert-danger'>Livro não encontrado para ID: $livro_id</div>";
         }
     }
-    $conn->close();
 }
 ?>
 
@@ -81,65 +66,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['livros'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Livros</title>
+    <title>Gerenciar Livros</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        function buscarLivro() {
-            let input = document.getElementById('buscaLivro').value;
-            let tipoBusca = document.querySelector('input[name="tipoBusca"]:checked').value;
-            let resultadoDiv = document.getElementById('resultadoBusca');
-
-            if (input.trim() === "") {
-                resultadoDiv.innerHTML = "<p class='text-danger'>Digite um ISBN ou nome de livro.</p>";
-                return;
-            }
-
-            fetch(`buscar_livros.php?tipo=${tipoBusca}&valor=${encodeURIComponent(input)}`)
-                .then(response => response.json())
-                .then(data => {
-                    resultadoDiv.innerHTML = "";
-                    if (data.length > 0) {
-                        data.forEach(livro => {
-                            resultadoDiv.innerHTML += `
-                                <div class='form-check'>
-                                    <input class='form-check-input' type='checkbox' name='livros[]' value='${livro.id}'>
-                                    <label class='form-check-label'>${livro.titulo} - ${livro.autor}</label>
-                                </div>`;
-                        });
-                    } else {
-                        resultadoDiv.innerHTML = "<p class='text-warning'>Nenhum livro encontrado.</p>";
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao buscar livro:', error);
-                    resultadoDiv.innerHTML = "<p class='text-danger'>Erro ao buscar livros.</p>";
-                });
-        }
-    </script>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
         <div class="card">
             <div class="card-header bg-primary text-white text-center">
-                <h4>Cadastro de Livros</h4>
+                <h4>Gerenciar Livros</h4>
             </div>
             <div class="card-body">
                 <a href="dashboard.php" class="btn btn-warning mb-3">Voltar ao Painel</a>
 
-                <div class="mb-3">
-                    <label for="buscaLivro" class="form-label">Buscar Livro</label>
-                    <input type="text" id="buscaLivro" class="form-control" placeholder="Digite o ISBN ou nome do livro">
-                    <div class="mt-2">
-                        <input type="radio" name="tipoBusca" value="isbn" checked> ISBN
-                        <input type="radio" name="tipoBusca" value="nome"> Nome
-                    </div>
-                    <button type="button" class="btn btn-primary mt-2" onclick="buscarLivro()">Buscar</button>
-                </div>
-
                 <form method="POST">
-                    <div id="resultadoBusca"></div>
-                    <button type="submit" class="btn btn-success mt-3 w-100">Cadastrar Selecionados</button>
+                    <label class="form-label">Buscar Livro</label>
+                    <input type="text" name="termo_busca" class="form-control" placeholder="Digite o ISBN ou nome">
+                    <div class="mt-2">
+                        <input type="radio" name="tipo_busca" value="isbn" checked> ISBN
+                        <input type="radio" name="tipo_busca" value="nome"> Nome
+                    </div>
+                    <button type="submit" name="buscar" class="btn btn-primary mt-2">Buscar</button>
                 </form>
+
+                <?php if (isset($livros_encontrados) && count($livros_encontrados) > 0): ?>
+                    <h5 class="mt-4">Resultados da Pesquisa</h5>
+                    <form method="POST">
+                        <ul class="list-group mt-3">
+                            <?php foreach ($livros_encontrados as $livro): ?>
+                                <?php
+                                $id = $livro['id'];
+                                $titulo = $livro['volumeInfo']['title'] ?? 'Título Desconhecido';
+                                $autores = isset($livro['volumeInfo']['authors']) ? implode(', ', $livro['volumeInfo']['authors']) : 'Autor Desconhecido';
+                                ?>
+                                <li class="list-group-item">
+                                    <input type="checkbox" name="livros[]" value="<?php echo $id; ?>">
+                                    <strong><?php echo htmlspecialchars($titulo); ?></strong>
+                                    <p><?php echo htmlspecialchars($autores); ?></p>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <button type="submit" name="cadastrar" class="btn btn-success mt-3 w-100">Cadastrar Livros Selecionados</button>
+                    </form>
+                <?php elseif (isset($livros_encontrados)): ?>
+                    <p class="text-warning mt-3">Nenhum livro encontrado.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
