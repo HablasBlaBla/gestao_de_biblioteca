@@ -96,8 +96,8 @@ if (!isset($_SESSION['professor_id'])) {
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="cadastro_livro.php">
-                            <i class="fas fa-book icon"></i> Cadastrar Livro
+                        <a href="buscar_livros.php">
+                            <i class="fas fa-book icon"></i> Buscar e Cadastrar Livros
                         </a>
                     </li>
                     <li class="list-group-item">
