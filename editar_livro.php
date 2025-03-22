@@ -62,12 +62,57 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Livro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            border-radius: 15px 15px 0 0;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .form-control {
+            border-radius: 10px;
+        }
+        .btn-primary {
+            border-radius: 10px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            border-radius: 10px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+        .list-group-item {
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .list-group-item:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.02);
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
     <div class="container mt-5">
         <div class="card">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>Editar Livro</h4>
+            <div class="card-header">
+                <h2><i class="fas fa-book"></i> Editar Livro</h2>
             </div>
             <div class="card-body">
                 <form method="POST">
@@ -99,8 +144,9 @@ $stmt->close();
                 </form>
             </div>
         </div>
+        <a href="visualizar_livros.php" class="btn btn-secondary mt-3 w-100">Voltar</a>
     </div>
-    <a href="visualizar_livros.php" class="btn btn-secondary mt-3">Voltar</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

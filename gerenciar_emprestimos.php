@@ -102,44 +102,49 @@ $result = $stmt->get_result();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Empréstimos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        function filtrarAlunos() {
-            var classe = document.getElementById("classeFilter").value;
-            var alunos = document.querySelectorAll("#alunoSelect option");
-            
-            alunos.forEach(function(aluno) {
-                if (classe === "" || aluno.getAttribute("data-classe") === classe) {
-                    aluno.style.display = "block";
-                } else {
-                    aluno.style.display = "none";
-                }
-            });
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .btn:hover {
+            background-color: #0056b3 !important;
+            color: white !important;
         }
 
-        function buscarAluno() {
-            var searchTerm = document.getElementById("searchAluno").value.toLowerCase();
-            var alunos = document.querySelectorAll("#alunoSelect option");
-            
-            alunos.forEach(function(aluno) {
-                var nome = aluno.textContent.toLowerCase();
-                if (nome.includes(searchTerm)) {
-                    aluno.style.display = "block";
-                } else {
-                    aluno.style.display = "none";
-                }
-            });
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-    </script>
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h2>Gerenciar Empréstimos</h2>
+        <h2><i class="fas fa-book"></i> Gerenciar Empréstimos</h2>
         <hr>
 
         <!-- Formulário para registrar empréstimo -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h4>Registrar Novo Empréstimo</h4>
+                <h4><i class="fas fa-plus-circle"></i> Registrar Novo Empréstimo</h4>
             </div>
             <div class="card-body">
                 <form method="POST">
@@ -179,7 +184,9 @@ $result = $stmt->get_result();
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Registrar Empréstimo</button>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Registrar Empréstimo
+                    </button>
                 </form>
             </div>
         </div>
@@ -187,11 +194,11 @@ $result = $stmt->get_result();
         <!-- Lista de Empréstimos -->
         <div class="card">
             <div class="card-header bg-success text-white">
-                <h4>Empréstimos Registrados</h4>
+                <h4><i class="fas fa-list"></i> Empréstimos Registrados</h4>
             </div>
             <div class="card-body">
                 <input type="text" class="form-control mb-3" id="searchAluno" placeholder="Pesquisar aluno">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>Título</th>
@@ -208,19 +215,44 @@ $result = $stmt->get_result();
                                 <td><?= $row['nome']; ?></td>
                                 <td><?= $row['data_emprestimo']; ?></td>
                                 <td><?= $row['data_devolucao']; ?></td>
-                                <td><a href="?devolver_id=<?= $row['id']; ?>" class="btn btn-danger btn-sm">Devolver</a></td>
+                                <td><a href="?devolver_id=<?= $row['id']; ?>" class="btn btn-danger btn-sm"><i class="fas fa-undo"></i> Devolver</a></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
                 <br>
-                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId"><i class="fas fa-arrow-left"></i> Voltar para o Painel</a>
                 <br>
             </div>
         </div>
-
     </div>
+    <script>
+        function filtrarAlunos() {
+            var classe = document.getElementById("classeFilter").value;
+            var alunos = document.querySelectorAll("#alunoSelect option");
+
+            alunos.forEach(function(aluno) {
+                if (classe === "" || aluno.getAttribute("data-classe") === classe) {
+                    aluno.style.display = "block";
+                } else {
+                    aluno.style.display = "none";
+                }
+            });
+        }
+
+        function buscarAluno() {
+            var searchTerm = document.getElementById("searchAluno").value.toLowerCase();
+            var alunos = document.querySelectorAll("#alunoSelect option");
+
+            alunos.forEach(function(aluno) {
+                var nome = aluno.textContent.toLowerCase();
+                if (nome.includes(searchTerm)) {
+                    aluno.style.display = "block";
+                } else {
+                    aluno.style.display = "none";
+                }
+            });
+        }
+    </script>
 </body>
 </html>
-
-

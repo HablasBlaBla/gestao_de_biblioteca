@@ -32,7 +32,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'];
     $serie = $_POST['serie'];
     $email = $_POST['email'];
-    $senha = isset($_POST['senha']) ? md5($_POST['senha']) : null; // Senha criptografada, se fornecida
+
+    // Valida o formato do e-mail
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<div class='alert alert-danger'>Erro: Email inválido!</div>";
+        return;
+    }
+
+    $senha = isset($_POST['senha']) ? password_hash($_POST['senha'], PASSWORD_DEFAULT) : null; // Senha criptografada
 
     // Verifica se o email do aluno já existe
     $sql_check = "SELECT id FROM alunos WHERE email = ?";
@@ -70,12 +77,50 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Aluno</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        .btn:hover {
+            background-color: #0056b3 !important;
+            color: white !important;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table th, .table td {
+            vertical-align: middle;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body class="bg-light">
     <div class="container mt-5">
         <div class="card">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>Cadastro de Aluno</h4>
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4><i class="fas fa-user-plus"></i> Cadastro de Aluno</h4>
+                    <a href="dashboard.php" class="btn btn-primary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Voltar para o Painel
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 <form method="POST" action="">
@@ -95,10 +140,13 @@ $conn->close();
                         <label for="senha" class="form-label">Senha</label>
                         <input type="password" class="form-control" name="senha">
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Cadastrar
+                    </button>
                 </form>
+
                 <br>
-                
+
                 <h5 class="mt-4">Lista de Alunos</h5>
                 <?php
                 // Exibindo a lista de alunos cadastrados
@@ -107,7 +155,7 @@ $conn->close();
                 $result = $conn->query($sql);
 
                 if ($result->num_rows > 0) {
-                    echo "<table class='table'>
+                    echo "<table class='table table-hover'>
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -126,7 +174,9 @@ $conn->close();
                                 <td>" . $row['serie'] . "</td>
                                 <td>" . $row['email'] . "</td>
                                 <td>
-                                    <a href='?deletar=" . $row['id'] . "' class='btn btn-danger'>Deletar</a>
+                                    <a href='?deletar=" . $row['id'] . "' class='btn btn-danger btn-sm'>
+                                        <i class='fas fa-trash-alt'></i> Deletar
+                                    </a>
                                 </td>
                             </tr>";
                     }
@@ -138,12 +188,10 @@ $conn->close();
 
                 $conn->close();
                 ?>
-
-                <br>
-                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
-                <br>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
