@@ -7,7 +7,7 @@ if (!isset($_SESSION['professor_id'])) {
     exit();
 }
 
-require 'conn.php'; // Arquivo de conexão com o banco
+require 'conn.php'; 
 
 // Deletar professor
 if (isset($_POST['delete'])) {
