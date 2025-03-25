@@ -18,68 +18,95 @@ if (!isset($_SESSION['professor_id'])) {
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            background: linear-gradient(135deg, #f0f4f8, #e0e7ff); /* Fundo suave */
             font-family: 'Arial', sans-serif;
+            color: #212121;
         }
         .card {
             border-radius: 15px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
         }
         .card-header {
             border-radius: 15px 15px 0 0;
-        }
-        .list-group-item {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background-color: #ffffff;
-        }
-        .list-group-item:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.02);
-        }
-        .list-group-item a {
-            text-decoration: none;
-            color: #333;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        .list-group-item a:hover {
-            color: #007bff;
-        }
-        .icon {
-            margin-right: 12px;
-            color: black;
-            font-size: 1.5rem;
+            background-color: #00796b;
+            color: white;
         }
         .card-header h2 {
             font-size: 1.8rem;
             font-weight: bold;
+            text-align: center;
         }
         .card-body {
             padding: 2rem;
+            background-color: white;
+            border-radius: 0 0 15px 15px;
         }
-        .btn-link {
-            text-decoration: none;
-            color: #333;
-        }
-        .btn-link:hover {
-            color: #007bff;
-        }
+        .list-group-item {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: none;
+    color: #00796b; /* Cor inicial do texto */
+}
+
+.list-group-item:hover {
+    background-color: #00796b; /* Cor de fundo ao passar o mouse */
+    color: white; /* Garante que o texto fique visível ao passar o mouse */
+    transform: scale(1.02);
+}
+
+.list-group-item a {
+    text-decoration: none;
+    color: inherit; /* Herda a cor do item da lista */
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.list-group-item a:hover {
+    color: white; /* Cor do link ao passar o mouse */
+}
+
+.icon {
+    margin-right: 12px;
+    color: #00796b; /* Cor inicial do ícone */
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.list-group-item:hover .icon {
+    color: white; /* Mantém o ícone visível em branco ao passar o mouse */
+}
+
         .btn-danger {
             background-color: #dc3545;
             color: white;
+            padding: 12px;
+            border-radius: 8px;
         }
         .btn-danger:hover {
             background-color: #c82333;
             color: white;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+        .alert-custom {
+            margin-top: 20px;
+            background-color: #c8e6c9;
+            color: #388e3c;
+            padding: 15px;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <div class="card">
-            <div class="card-header bg-primary text-white text-center">
+            <div class="card-header">
                 <h2><i class="fas fa-user"></i> Bem-vindo, <?php echo $_SESSION['nome']; ?>!</h2>
             </div>
             <div class="card-body">

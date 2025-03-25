@@ -30,61 +30,102 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login de Professores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #007bff, #28a745);
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #e0f7fa; /* Fundo suave */
+            font-family: Arial, sans-serif;
+            color: #212121;
         }
-        .login-container {
+        .form-container {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #006064; /* Azul mais escuro */
+            font-size: 24px;
+        }
+        .form-label {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .form-control {
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+        }
+        .form-control:focus {
+            border-color: #004d40;
+            box-shadow: 0 0 8px rgba(0, 100, 64, 0.4);
+        }
+        .btn-custom {
+            background-color: #004d40;
+            color: white;
+            font-size: 1.1rem;
+            padding: 12px 20px;
+            border-radius: 8px;
             width: 100%;
-            max-width: 400px;
         }
-        .card-header {
-            background: #007bff;
+        .btn-custom:hover {
+            background-color: #00332d;
+            transition: background-color 0.3s ease;
         }
-        .btn-login {
-            background: #28a745;
-            border: none;
+        .alert-custom {
+            margin-top: 20px;
+            background-color: #c8e6c9;
+            color: #388e3c;
+            padding: 15px;
+            border-radius: 8px;
         }
-        .btn-login:hover {
-            background: #218838;
+        .hover-effect:hover {
+            background-color: #004d40;
+            color: white;
+            transition: all 0.3s;
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+        .text-center {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container login-container">
-        <div class="card shadow-lg">
-            <div class="card-header text-white text-center">
-                <h4>Login de Professor</h4>
-            </div>
-            <div class="card-body">
-                <?php if (isset($erro)) { echo "<div class='alert alert-danger text-center'>$erro</div>"; } ?>
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" name="senha" required autocomplete="off">
-                    </div>
-                    <button type="submit" class="btn btn-login w-100 text-white">Entrar</button>
-                </form>
-            </div>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="text-center mb-4">Login de Professores</h2>
+            <?php if (isset($erro)) { echo "<div class='alert alert-danger'>$erro</div>"; } ?>
+            <form method="POST">
+                <div class="mb-4">
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" class="form-control" name="email" id="email" required aria-label="Email" placeholder="Digite seu email">
+                </div>
+                <div class="mb-4">
+                    <label for="senha" class="form-label"><i class="fas fa-lock"></i> Senha</label>
+                    <input type="password" class="form-control" name="senha" id="senha" required aria-label="Senha" placeholder="Digite sua senha">
+                </div>
+                <button type="submit" class="btn btn-custom">Entrar</button>
+            </form>
+            <p class="text-center mt-4">Ainda não tem uma conta? <a href="cp.php" class="hover-effect">Cadastre-se!</a></p>
         </div>
-        <footer class="text-center text-white mt-3">
-            <p>&copy; 2025 Biblioteca Escolar</p>
-        </footer>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
     <!-- <script src="bloquear_devtools.js"></script> -->
     <script>

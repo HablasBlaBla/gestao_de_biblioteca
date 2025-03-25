@@ -79,9 +79,40 @@ $conn->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        .btn:hover {
-            background-color: #0056b3 !important;
-            color: white !important;
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .alert {
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #c82333;
         }
 
         .card {
@@ -92,6 +123,11 @@ $conn->close();
         .card-header {
             background-color: #007bff;
             color: white;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .card-body {
+            padding: 20px;
         }
 
         .table th, .table td {
@@ -102,16 +138,21 @@ $conn->close();
             background-color: #f8f9fa;
         }
 
-        .btn-danger {
-            background-color: #dc3545;
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 0.875rem;
         }
 
-        .btn-danger:hover {
-            background-color: #c82333;
+        .form-control, .btn {
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .btn:hover {
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
