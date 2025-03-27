@@ -9,24 +9,6 @@ if (!isset($_SESSION['professor_id'])) {
 
 require 'conn.php'; // Arquivo de conexão com o banco
 
-// Deletar aluno
-if (isset($_GET['deletar'])) {
-    $aluno_id = $_GET['deletar'];
-
-    // Deletando o aluno
-    $sql = "DELETE FROM alunos WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $aluno_id);
-
-    if ($stmt->execute()) {
-        echo "<div class='alert alert-success'>Aluno deletado com sucesso!</div>";
-    } else {
-        echo "<div class='alert alert-danger'>Erro ao deletar aluno!</div>";
-    }
-
-    $stmt->close();
-}
-
 // Cadastro de aluno
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'];
@@ -35,7 +17,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Valida o formato do e-mail
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo "<div class='alert alert-danger'>Erro: Email inválido!</div>";
+        echo "<div class='alert alert-danger fade show' role='alert'>
+                Erro: Email inválido!
+              </div>";
         return;
     }
 
@@ -49,7 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt_check->store_result();
 
     if ($stmt_check->num_rows > 0) {
-        echo "<div class='alert alert-danger'>Erro: Este email já está cadastrado!</div>";
+        echo "<div class='alert alert-danger fade show' role='alert'>
+                Erro: Este email já está cadastrado!
+              </div>";
     } else {
         // Inserindo no banco de dados
         $sql = "INSERT INTO alunos (nome, serie, email, senha) VALUES (?, ?, ?, ?)";
@@ -57,9 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ssss", $nome, $serie, $email, $senha);
 
         if ($stmt->execute()) {
-            echo "<div class='alert alert-success'>Aluno cadastrado com sucesso!</div>";
+            echo "<div class='alert alert-success fade show' role='alert'>
+                    Aluno cadastrado com sucesso!
+                  </div>";
         } else {
-            echo "<div class='alert alert-danger'>Erro ao cadastrar aluno!</div>";
+            echo "<div class='alert alert-danger fade show' role='alert'>
+                    Erro ao cadastrar aluno!
+                  </div>";
         }
     }
 
@@ -80,86 +70,91 @@ $conn->close();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f4f6f9;
-        }
+    background: linear-gradient(135deg, #f0f4f8, #e0e7ff); /* Fundo suave */
+    font-family: 'Arial', sans-serif;
+    color: #212121;
+}
 
-        .container {
-            margin-top: 20px;
-        }
+.container {
+    margin-top: 40px;
+}
 
-        .form-control {
-            border-radius: 8px;
-        }
+.form-control {
+    border-radius: 15px; /* Aumentar o raio da borda */
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease; /* Adicionar transição para a borda */
+}
 
-        .alert {
-            margin-top: 15px;
-        }
+.form-control:focus {
+    box-shadow: 0 0 10px rgba(0, 121, 107, 0.5); /* Cor da sombra ao focar */
+    border-color: #00796b; /* Cor da borda ao focar */
+}
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
+.alert {
+    margin-top: 15px;
+    transition: opacity 0.5s ease-in-out;
+    background-color: #c8e6c9; /* Cor de fundo da alerta */
+    color: #388e3c; /* Cor do texto da alerta */
+    border-radius: 8px; /* Raio da borda */
+    padding: 10px; /* Adicionar padding */
+}
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
+.card {
+    border-radius: 15px; /* Aumentar o raio da borda */
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+}
 
-        .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
+.card-header {
+    background-color: #00796b; /* Cor de fundo do cabeçalho */
+    color: white;
+    border-radius: 15px 15px 0 0; /* Aumentar o raio da borda */
+    padding: 1rem; /* Adicionar padding */
+}
 
-        .btn-danger:hover {
-            background-color: #c82333;
-            border-color: #c82333;
-        }
+.btn-primary {
+    background-color: #00796b; /* Cor do botão primário */
+    border-color: #00796b;
+    padding: 12px 20px; /* Adicionar padding */
+    border-radius: 8px; /* Raio da borda */
+    transition: all 0.3s ease; /* Transição suave */
+}
 
-        .card {
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+.btn-primary:hover {
+    background-color: #004d40; /* Cor ao passar o mouse */
+    border-color: #004d40; /* Cor da borda ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Sombra ao passar o mouse */
+}
 
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            border-radius: 8px 8px 0 0;
-        }
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    padding: 12px 20px; /* Adicionar padding */
+    border-radius: 8px; /* Raio da borda */
+    transition: all 0.3s ease; /* Transição suave */
+}
 
-        .card-body {
-            padding: 20px;
-        }
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Sombra ao passar o mouse */
+}
 
-        .table th, .table td {
-            vertical-align: middle;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.875rem;
-        }
-
-        .form-control, .btn {
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus, .btn:hover {
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
+.d-flex {
+    display: flex; /* Garantir que o display seja flex */
+    justify-content: space-between;
+    align-items: center;
+}
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex">
                     <h4><i class="fas fa-user-plus"></i> Cadastro de Aluno</h4>
-                    <a href="dashboard.php" class="btn btn-primary btn-sm">
-                        <i class="fas fa-arrow-left"></i> Voltar para o Painel
+                    <a href="lista_alunos.php" class="btn btn-primary btn-sm">
+                        <i class="fas fa-list"></i> Ver Lista de Alunos
                     </a>
                 </div>
             </div>
@@ -185,52 +180,11 @@ $conn->close();
                         <i class="fas fa-save"></i> Cadastrar
                     </button>
                 </form>
-
-                <br>
-
-                <h5 class="mt-4">Lista de Alunos</h5>
-                <?php
-                // Exibindo a lista de alunos cadastrados
-                require 'conn.php';
-                $sql = "SELECT id, nome, serie, email FROM alunos";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    echo "<table class='table table-hover'>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Nome</th>
-                                    <th>Série</th>
-                                    <th>Email</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>";
-
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>
-                                <td>" . $row['id'] . "</td>
-                                <td>" . $row['nome'] . "</td>
-                                <td>" . $row['serie'] . "</td>
-                                <td>" . $row['email'] . "</td>
-                                <td>
-                                    <a href='?deletar=" . $row['id'] . "' class='btn btn-danger btn-sm'>
-                                        <i class='fas fa-trash-alt'></i> Deletar
-                                    </a>
-                                </td>
-                            </tr>";
-                    }
-
-                    echo "</tbody></table>";
-                } else {
-                    echo "<p>Nenhum aluno cadastrado.</p>";
-                }
-
-                $conn->close();
-                ?>
             </div>
         </div>
+        <br>
+                <a href="dashboard.php" class="btn btn-primary w-100" id="voltaDashboardId">Voltar para o Painel</a>
+                <br>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

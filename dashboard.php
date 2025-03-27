@@ -42,17 +42,18 @@ if (!isset($_SESSION['professor_id'])) {
             border-radius: 0 0 15px 15px;
         }
         .list-group-item {
-    transition: all 0.3s ease;
+    transition: all 0.4s ease; /* Aumentar a duração da transição */
     cursor: pointer;
     background-color: #ffffff;
     border: none;
-    color: #00796b; /* Cor inicial do texto */
+    color: #00796b;
 }
 
 .list-group-item:hover {
-    background-color: #00796b; /* Cor de fundo ao passar o mouse */
-    color: white; /* Garante que o texto fique visível ao passar o mouse */
-    transform: scale(1.02);
+    background-color: #00796b;
+    color: white;
+    transform: scale(1.05); /* Aumentar a escala para um efeito mais sutil */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra */
 }
 
 .list-group-item a {
@@ -78,16 +79,19 @@ if (!isset($_SESSION['professor_id'])) {
     color: white; /* Mantém o ícone visível em branco ao passar o mouse */
 }
 
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-            color: white;
-        }
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Adicionar transição */
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra ao passar o mouse */
+}
+        
         .text-center {
             text-align: center;
         }
