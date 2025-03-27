@@ -118,47 +118,52 @@ if (!isset($_SESSION['professor_id'])) {
                 <ul class="list-group">
                     <li class="list-group-item">
                         <a href="cadastro_professor.php">
-                            <i class="fas fa-chalkboard-teacher icon"></i> Cadastrar Professor
+                            <i class="fas fa-chalkboard-teacher icon"></i> CADASTRAR PROFESSOR
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="cadastro_aluno.php">
-                            <i class="fas fa-user-graduate icon"></i> Cadastrar Aluno
+                            <i class="fas fa-user-graduate icon"></i> CADASTRAR ALUNO
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="buscar_livros.php">
-                            <i class="fas fa-book icon"></i> Buscar e Cadastrar Livros
+                            <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="cadastro_emprestimos.php">
-                            <i class="fas fa-exchange-alt icon"></i> Criar Empréstimo
+                            <i class="fas fa-exchange-alt icon"></i> CRIAR EMPRÉSTIMOS
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="gerenciar_emprestimos.php">
-                            <i class="fas fa-tasks icon"></i> Gerenciar Empréstimos
+                            <i class="fas fa-tasks icon"></i> CRIAR EMPRÉSTIMOS
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="listar_emprestimos.php">
+                            <i class="fas fa-tasks icon"></i> EMPRÉSTIMOS REGISTADOS
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="editar_livro.php">
-                            <i class="fas fa-edit icon"></i> Editar Livro
+                            <i class="fas fa-edit icon"></i> EDITAR LIVRO
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="visualizar_livros.php">
-                            <i class="fas fa-eye icon"></i> Visualizar Livros
+                            <i class="fas fa-eye icon"></i> VISUALIZAR LIVROS
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="relatorios.php">
-                            <i class="fas fa-file-alt icon"></i> Relatórios
+                            <i class="fas fa-file-alt icon"></i> RELATÓRIOS
                         </a>
                     </li>
                     <li class="list-group-item">
                         <a href="logout.php" class="btn btn-danger w-100 text-start">
-                            <i class="fas fa-sign-out-alt icon"></i> Sair
+                            <i class="fas fa-sign-out-alt icon"></i> SAIR
                         </a>
                     </li>
                 </ul>
