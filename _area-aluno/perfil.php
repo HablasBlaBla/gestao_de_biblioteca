@@ -11,11 +11,25 @@ require '../conn.php'; // Conexão com o banco de dados
 $aluno_id = $_SESSION['aluno_id'];
 $sql = "SELECT * FROM alunos WHERE id = ?";
 $stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die('Prepare failed: ' . htmlspecialchars($conn->error));
+}
 $stmt->bind_param("i", $aluno_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result === false) {
+    die('Execute failed: ' . htmlspecialchars($stmt->error));
+}
 $aluno = $result->fetch_assoc();
+if (!$aluno) {
+    die('No student found with the given ID.');
+}
 ?>
+<?php if (!empty($aluno['foto_perfil'])): ?>
+    <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="img-fluid profile-picture">
+<?php else: ?>
+    <p>Nenhuma foto de perfil disponível.</p>
+<?php endif; ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,22 +38,48 @@ $aluno = $result->fetch_assoc();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - Aluno</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
         <h2>Perfil do Aluno</h2>
-        <form method="POST" action="atualizar_perfil.php">
+
+        <div class="mb-3">
+            <label for="foto" class="form-label">Foto de Perfil</label><br>
+            <?php if (!empty($aluno['foto_perfil'])): ?>
+                <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="img-fluid profile-picture">
+            <?php else: ?>
+                <p>Nenhuma foto de perfil disponível.</p>
+            <?php endif; ?>
+        </div>
+
+        <form method="POST" action="atualizar_perfil.php" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome" value="<?php echo $aluno['nome']; ?>" required>
+                <label for="foto" class="form-label">Foto de Perfil</label>
+                <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome (até 12 caracteres)</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($aluno['nome']); ?>" maxlength="12" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $aluno['email']; ?>" required>
+                <input type="email" class="form-control" id="email" name="email" value="<?php echo htmlspecialchars($aluno['email']); ?>" required>
             </div>
             <div class="mb-3">
                 <label for="serie" class="form-label">Série</label>
-                <input type="text" class="form-control" id="serie" name="serie" value="<?php echo $aluno['serie']; ?>" required>
+                <input type="text" class="form-control" id="serie" name="serie" value="<?php echo htmlspecialchars($aluno['serie']); ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3"><?php echo htmlspecialchars($aluno['descricao']); ?></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Atualizar</button>
         </form>

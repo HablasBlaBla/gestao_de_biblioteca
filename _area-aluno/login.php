@@ -19,7 +19,7 @@ if (isset($_POST['login'])) {
         $_SESSION['aluno_id'] = $aluno['id'];
         $_SESSION['aluno_nome'] = $aluno['nome'];
         $_SESSION['aluno_email'] = $aluno['email'];
-        header("Location: dashboard_aluno.php"); // Redireciona para o painel
+        header("Location: dashboard.php"); // Redireciona para o painel
     } else {
         $erro = "Credenciais inválidas!";
     }
