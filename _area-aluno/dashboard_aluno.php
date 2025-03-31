@@ -8,6 +8,26 @@ if (!isset($_SESSION['aluno_id'])) {
 }
 
 require '../conn.php'; // Arquivo de conexão com o banco de dados
+
+// Verifica se foi feito uma pesquisa
+$pesquisa = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
+
+// Consulta para pegar os livros
+$sql = "SELECT id, titulo, autor, isbn, capa_url FROM livros WHERE titulo LIKE ? OR isbn LIKE ?";
+$stmt = $conn->prepare($sql);
+$pesquisa_param = "%$pesquisa%";
+$stmt->bind_param("ss", $pesquisa_param, $pesquisa_param);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Consulta para verificar se o aluno já pegou um livro emprestado
+$aluno_id = $_SESSION['aluno_id'];
+$sql_emprestimo = "SELECT id FROM emprestimos WHERE aluno_id = ? AND devolvido = 'não'";
+$stmt_emprestimo = $conn->prepare($sql_emprestimo);
+$stmt_emprestimo->bind_param("i", $aluno_id);
+$stmt_emprestimo->execute();
+$result_emprestimo = $stmt_emprestimo->get_result();
+$ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um livro emprestado
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +37,7 @@ require '../conn.php'; // Arquivo de conexão com o banco de dados
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Aluno</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Para ícones -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .sidebar {
             height: 100vh;
@@ -42,6 +62,13 @@ require '../conn.php'; // Arquivo de conexão com o banco de dados
             margin-left: 250px;
             padding: 20px;
         }
+        .book-card {
+            margin-bottom: 20px;
+        }
+        .book-card img {
+            max-width: 100px;
+            max-height: 150px;
+        }
     </style>
 </head>
 <body>
@@ -58,14 +85,54 @@ require '../conn.php'; // Arquivo de conexão com o banco de dados
     <div class="content">
         <h1>Bem-vindo, <?php echo $_SESSION['aluno_nome']; ?>!</h1>
         <p>Email: <?php echo $_SESSION['aluno_email']; ?></p>
-        <p>Aqui você pode acessar suas páginas de perfil, histórico, mensagens e configurações.</p>
+        
+        <h3>Catálogo de Livros</h3>
+        <form method="get" class="mb-4">
+            <input type="text" name="pesquisa" class="form-control" placeholder="Pesquise pelo nome ou ISBN do livro" value="<?php echo htmlspecialchars($pesquisa); ?>">
+            <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
+        </form>
 
-        <div class="mt-5">
-            <h3>Conteúdo da Página</h3>
-            <p>Escolha uma opção no menu à esquerda para acessar as páginas.</p>
+        <div class="row">
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $livro_id = $row['id'];
+                    $titulo = $row['titulo'];
+                    $autor = $row['autor'];
+                    $isbn = $row['isbn'];
+                    $capa_url = $row['capa_url'] ?: 'https://via.placeholder.com/100x150'; // Imagem padrão caso não tenha capa
+            ?>
+                    <div class="col-md-4">
+                        <div class="card book-card">
+                            <img src="<?php echo $capa_url; ?>" class="card-img-top" alt="Capa do livro">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo $titulo; ?></h5>
+                                <p class="card-text">Autor: <?php echo $autor; ?></p>
+                                <p class="card-text">ISBN: <?php echo $isbn; ?></p>
+                                <a href="detalhes_livro.php?id=<?php echo $livro_id; ?>" class="btn btn-info">Detalhes</a>
+
+                                <?php if (!$ja_pegou_livro) { ?>
+                                    <a href="pegar_livro.php?id=<?php echo $livro_id; ?>" class="btn btn-success mt-2">Pegar Emprestado</a>
+                                <?php } else { ?>
+                                    <p class="text-warning mt-2">Você já pegou um livro emprestado.</p>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+            <?php
+                }
+            } else {
+                echo "<div class='alert alert-info'>Nenhum livro encontrado.</div>";
+            }
+            ?>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+<?php
+$stmt->close();
+$conn->close();
+?>
