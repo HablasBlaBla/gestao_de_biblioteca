@@ -23,7 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return;
     }
 
-    $senha = isset($_POST['senha']) ? password_hash($_POST['senha'], PASSWORD_DEFAULT) : null; // Senha criptografada
+    // Criptografando a senha com MD5
+    $senha = isset($_POST['senha']) ? md5($_POST['senha']) : null; // Senha criptografada com MD5
 
     // Verifica se o email do aluno já existe
     $sql_check = "SELECT id FROM alunos WHERE email = ?";
@@ -59,6 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt">

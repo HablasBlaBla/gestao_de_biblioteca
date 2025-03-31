@@ -127,6 +127,11 @@ if (!isset($_SESSION['professor_id'])) {
                         </a>
                     </li>
                     <li class="list-group-item">
+                        <a href="enviar_mensagem.php">
+                            <i class="fas fa-user-graduate icon"></i> MENSAGEM
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="buscar_livros.php">
                             <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
                         </a>
