@@ -153,6 +153,11 @@ if (!isset($_SESSION['professor_id'])) {
                         </a>
                     </li>
                     <li class="list-group-item">
+                        <a href="historico_emprestimos.php">
+                            <i class="fas fa-file-alt icon"></i> Histórico
+                        </a>
+                    </li>
+                    <li class="list-group-item">
                         <a href="logout.php" class="btn btn-danger w-100 text-start">
                             <i class="fas fa-sign-out-alt icon"></i> Sair
                         </a>

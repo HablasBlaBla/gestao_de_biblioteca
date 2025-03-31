@@ -17,7 +17,7 @@ $offset = ($page - 1) * $limit;
 // Filtro de pesquisa
 $search = '';
 if (isset($_GET['search'])) {
-    $search = $_GET['search'];
+    $search = htmlspecialchars(trim($_GET['search']));
 }
 
 // Consultando todos os livros com paginação e filtro
@@ -36,7 +36,6 @@ $stmt_total->execute();
 $total_result = $stmt_total->get_result();
 $total_books = $total_result->fetch_assoc()['total'];
 $total_pages = ceil($total_books / $limit);
-
 ?>
 
 <!DOCTYPE html>
@@ -125,6 +124,15 @@ $total_pages = ceil($total_books / $limit);
                 <h4><i class="fas fa-book"></i> Visualização de Livros</h4>
             </div>
             <div class="card-body">
+                <!-- Exibição de mensagens -->
+                <?php if (isset($_SESSION['msg'])): ?>
+                    <div class="alert alert-<?php echo $_SESSION['msg_type']; ?> alert-dismissible fade show" role="alert">
+                        <?php echo $_SESSION['msg']; ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <?php unset($_SESSION['msg']); ?>
+                <?php endif; ?>
+
                 <!-- Campo de pesquisa -->
                 <form method="GET" action="visualizar_livros.php" class="search-container">
                     <div class="input-group">
@@ -160,7 +168,7 @@ $total_pages = ceil($total_books / $limit);
                                 </div>
                             </div>
 
-                            <!-- Detalhes adicionais (ocultos inicialmente) -->
+                            <!-- Detalhes adicionais -->
                             <div class="book-details" id="details-<?php echo $row['id']; ?>">
                                 <p><strong>Ano de Publicação:</strong> <?php echo $row['ano_publicacao']; ?></p>
                                 <p><strong>Gênero:</strong> <?php echo $row['genero']; ?></p>
@@ -177,11 +185,17 @@ $total_pages = ceil($total_books / $limit);
                 <!-- Paginação -->
                 <div class="pagination">
                     <?php if ($page > 1): ?>
+                        <a href="visualizar_livros.php?page=1&search=<?php echo $search; ?>" class="btn btn-outline-primary">Primeira</a>
                         <a href="visualizar_livros.php?page=<?php echo $page - 1; ?>&search=<?php echo $search; ?>" class="btn btn-outline-primary">Anterior</a>
                     <?php endif; ?>
-                    <span class="mx-2">Página <?php echo $page; ?> de <?php echo $total_pages; ?></span>
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <a href="visualizar_livros.php?page=<?php echo $i; ?>&search=<?php echo $search; ?>" class="btn <?php echo ($i == $page) ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
                     <?php if ($page < $total_pages): ?>
                         <a href="visualizar_livros.php?page=<?php echo $page + 1; ?>&search=<?php echo $search; ?>" class="btn btn-outline-primary">Próxima</a>
+                        <a href="visualizar_livros.php?page=<?php echo $total_pages; ?>&search=<?php echo $search; ?>" class="btn btn-outline-primary">Última</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -193,7 +207,6 @@ $total_pages = ceil($total_books / $limit);
     </div>
 
     <script>
-        // Função para alternar a exibição dos detalhes
         function toggleDetails(bookId) {
             var details = document.getElementById('details-' + bookId);
             var button = event.target;

@@ -9,16 +9,17 @@ if (!isset($_SESSION['professor_id'])) {
 
 require 'conn.php'; // Arquivo de conexão com o banco
 
-// Consultando o número total de empréstimos por livro
-$sql_livros = "
-    SELECT livros.titulo, COUNT(emprestimos.id) AS total_emprestimos
+// Consultando as informações para o gráfico de empréstimos
+$sql = "
+    SELECT 
+        livros.titulo, 
+        COUNT(emprestimos.id) AS total_emprestimos
     FROM emprestimos
     JOIN livros ON emprestimos.livro_id = livros.id
     GROUP BY emprestimos.livro_id
     ORDER BY total_emprestimos DESC
 ";
 
-// Consultando os alunos que mais pegaram livros emprestados
 $sql_alunos = "
     SELECT alunos.nome, COUNT(emprestimos.id) AS total_emprestimos
     FROM emprestimos
@@ -28,7 +29,6 @@ $sql_alunos = "
     LIMIT 5
 ";
 
-// Consultando a sala que mais pegou livros emprestados
 $sql_salas = "
     SELECT alunos.serie, COUNT(emprestimos.id) AS total_emprestimos
     FROM emprestimos
@@ -38,7 +38,8 @@ $sql_salas = "
     LIMIT 1
 ";
 
-$result_livros = $conn->query($sql_livros);
+// Consultas de dados
+$result_livros = $conn->query($sql);
 $result_alunos = $conn->query($sql_alunos);
 $result_salas = $conn->query($sql_salas);
 ?>

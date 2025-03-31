@@ -150,6 +150,43 @@ $conn->close();
         .form-control:focus, .btn:hover {
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
+
+        /* Efeitos de hover */
+        .list-group-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: #ffffff;
+            color: #00796b;
+        }
+
+        .list-group-item:hover {
+            background-color: #00796b;
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .list-group-item a:hover {
+            color: white;
+        }
+
+        .icon {
+            margin-right: 12px;
+            color: #00796b;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .list-group-item:hover .icon {
+            color: white;
+        }
     </style>
 </head>
 <body>
