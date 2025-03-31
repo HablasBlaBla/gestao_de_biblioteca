@@ -49,65 +49,93 @@ $total_pages = ceil($total_books / $limit);
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Arial', sans-serif;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .card-header {
-            border-radius: 15px 15px 0 0;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-        }
-        .book-cover {
-            width: 120px;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .book-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #333;
-        }
-        .book-info {
-            margin-left: 15px;
-        }
-        .book-details {
-            padding-top: 15px;
-            display: none;
-        }
-        .book-actions {
-            display: flex;
-            justify-content: flex-start;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .book-actions a {
-            margin-left: 10px;
-        }
-        .toggle-details-btn {
-            cursor: pointer;
-        }
-        .list-item {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .list-item:hover {
-            transform: scale(1.02);
-            transition: all 0.3s ease;
-        }
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Fundo suave */
+    font-family: 'Arial', sans-serif;
+    color: #212121; /* Cor do texto padrão */
+}
+
+.card {
+    border-radius: 15px; /* Raio da borda */
+    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1); /* Sombra mais profunda */
+    margin-bottom: 20px; /* Espaçamento entre os cartões */
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0; /* Raio da borda do cabeçalho */
+    background-color: #00796b; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    text-align: center; /* Centralizar texto */
+    padding: 1rem; /* Padding para o cabeçalho */
+}
+
+.book-cover {
+    width: 120px; /* Largura da capa do livro */
+    height: 180px; /* Altura da capa do livro */
+    object-fit: cover; /* Ajustar imagem */
+    border-radius: 10px; /* Raio da borda */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra da capa do livro */
+    transition: transform 0.3s ease; /* Transição suave */
+}
+
+.book-cover:hover {
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
+
+.book-title {
+    font-size: 1.4rem; /* Tamanho da fonte do título */
+    font-weight: bold; /* Negrito */
+    color: #333; /* Cor do título */
+}
+
+.book-info {
+    margin-left: 15px; /* Margem à esquerda */
+}
+
+.book-details {
+    padding-top: 15px; /* Padding superior */
+    display: none; /* Ocultar detalhes inicialmente */
+}
+
+.book-actions {
+    display: flex; /* Flexbox para alinhamento */
+    justify-content: flex-start; /* Alinhamento à esquerda */
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 10px; /* Margem superior */
+}
+
+.book-actions a {
+    padding: 8px 12px; /* Padding para os links de ação */
+    background-color: #00796b; /* Cor de fundo dos botões de ação */
+    color: white; /* Cor do texto */
+    border-radius: 5px; /* Raio da borda */
+    text-decoration: none; /* Remover sublinhado */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transições suaves */
+}
+
+.book-actions a:hover {
+    background-color: #005b4d; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
+
+.toggle-details-btn {
+    cursor: pointer; /* Cursor de ponteiro */
+}
+
+.list-item {
+    display: flex; /* Flexbox para alinhamento */
+    flex-direction: row; /* Direção da flexbox */
+    align-items: center; /* Alinhamento vertical */
+    padding: 20px; /* Padding para os itens da lista */
+    background-color: #fff; /* Cor de fundo */
+    border-radius: 8px; /* Raio da borda */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra */
+    margin-bottom: 20px; /* Margem inferior */
+    transition: transform 0.3s ease; /* Transição suave */
+}
+
+.list-item:hover {
+    transform: scale(1.02); /* Efeito de escala ao passar o mouse */
+}
         .pagination {
             justify-content: center;
             margin-top: 30px;

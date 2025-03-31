@@ -54,66 +54,99 @@ $result_salas = $conn->query($sql_salas);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Arial', sans-serif;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            border-radius: 15px 15px 0 0;
-        }
-        .list-group-item {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background-color: #ffffff;
-        }
-        .list-group-item:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.02);
-        }
-        .list-group-item a {
-            text-decoration: none;
-            color: #333;
-            display: flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-        .list-group-item a:hover {
-            color: #007bff;
-        }
-        .icon {
-            margin-right: 12px;
-            color: black;
-            font-size: 1.5rem;
-        }
-        .card-header h2 {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        .card-body {
-            padding: 2rem;
-        }
-        .btn-link {
-            text-decoration: none;
-            color: #333;
-        }
-        .btn-link:hover {
-            color: #007bff;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-            color: white;
-        }
-        .mb-4 {
-            margin-bottom: 1.5rem !important;
-        }
+       body {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Fundo suave */
+    font-family: 'Arial', sans-serif;
+    color: #212121; /* Cor do texto padrão */
+}
+
+.card {
+    border-radius: 15px; /* Raio da borda */
+    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1); /* Sombra mais profunda */
+    margin-bottom: 20px; /* Espaçamento entre os cartões */
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0; /* Raio da borda do cabeçalho */
+    background-color: #00796b; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 1rem; /* Padding para o cabeçalho */
+}
+
+.list-group-item {
+    transition: all 0.3s ease; /* Transição suave */
+    cursor: pointer;
+    background-color: #ffffff; /* Cor de fundo padrão */
+    border-radius: 8px; /* Raio da borda */
+    padding: 12px; /* Padding para os itens da lista */
+}
+
+.list-group-item:hover {
+    background-color: #e0e0e0; /* Cor de fundo ao passar o mouse */
+    transform: scale(1.02); /* Efeito de escala */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Sombra ao passar o mouse */
+}
+
+.list-group-item a {
+    text-decoration: none; /* Remover sublinhado */
+    color: #333; /* Cor do texto */
+    display: flex; /* Flexbox para alinhamento */
+    align-items: center; /* Alinhamento vertical */
+    font-size: 1.1rem; /* Tamanho da fonte */
+}
+
+.list-group-item a:hover {
+    color: #007bff; /* Cor do link ao passar o mouse */
+}
+
+.icon {
+    margin-right: 12px; /* Espaçamento à direita do ícone */
+    color: #333; /* Cor do ícone */
+    font-size: 1.5rem; /* Tamanho do ícone */
+    transition: color 0.3s ease; /* Transição suave para a cor */
+}
+
+.list-group-item:hover .icon {
+    color: #007bff; /* Cor do ícone ao passar o mouse */
+}
+
+.card-header h2 {
+    font-size: 1.8rem; /* Tamanho da fonte do cabeçalho */
+    font-weight: bold; /* Negrito */
+    margin: 0; /* Remover margens */
+}
+
+.card-body {
+    padding: 2rem; /* Padding para o corpo do cartão */
+}
+
+.btn-link {
+    text-decoration: none; /* Remover sublinhado */
+    color: #333; /* Cor do botão link */
+    transition: color 0.3s ease; /* Transição suave */
+}
+
+.btn-link:hover {
+    color: #007bff; /* Cor do link ao passar o mouse */
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Cor de fundo do botão de perigo */
+    color: white; /* Cor do texto */
+    padding: 12px 20px; /* Padding para o botão */
+    border-radius: 8px; /* Raio da borda */
+    border: none; /* Remover borda */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transições suaves */
+}
+
+.btn-danger:hover {
+    background-color: #c82333; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important; /* Margem inferior */
+}
     </style>
 </head>
 <body>

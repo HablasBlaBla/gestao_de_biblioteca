@@ -81,90 +81,126 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['termo_busca'])) {
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Arial', sans-serif;
-        }
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Fundo suave */
+    font-family: 'Arial', sans-serif;
+    color: #212121; /* Cor do texto padrão */
+}
 
-        .card {
-            border-radius: 15px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-        }
+.card {
+    border-radius: 15px; /* Raio da borda */
+    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1); /* Sombra mais profunda */
+    margin-bottom: 20px; /* Espaçamento entre os cartões */
+}
 
-        .card-header {
-            border-radius: 15px 15px 0 0;
-            background-color: #007bff;
-            color: white;
-        }
+.card-header {
+    border-radius: 15px 15px 0 0; /* Raio da borda do cabeçalho */
+    background-color: #00796b; /* Cor de fundo do cabeçalho */
+    color: white; /* Cor do texto do cabeçalho */
+    padding: 1rem; /* Padding para o cabeçalho */
+}
 
-        .card-header h2 {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
+.card-header h2 {
+    font-size: 1.8rem; /* Tamanho da fonte do cabeçalho */
+    font-weight: bold; /* Negrito */
+    margin: 0; /* Remover margens */
+}
 
-        .card-body {
-            padding: 2rem;
-        }
+.card-body {
+    padding: 2rem; /* Padding para o corpo do cartão */
+}
 
-        .btn-custom {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            transition: background-color 0.3s;
-        }
+.btn-custom {
+    background-color: #00796b; /* Cor do botão */
+    color: white; /* Cor do texto */
+    border: none; /* Remover borda */
+    padding: 12px 20px; /* Padding para o botão */
+    border-radius: 8px; /* Raio da borda */
+    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
+}
 
-        .btn-custom:hover {
-            background-color: #0056b3;
-        }
+.btn-custom:hover {
+    background-color: #005b4d; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
 
-        .list-group-item {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background-color: #ffffff;
-        }
+.list-group-item {
+    transition: all 0.3s ease; /* Transição suave */
+    cursor: pointer; /* Cursor de ponteiro */
+    background-color: #ffffff; /* Cor de fundo padrão */
+    border-radius: 8px; /* Raio da borda */
+    padding: 12px; /* Padding para os itens da lista */
+}
 
-        .list-group-item:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.02);
-        }
+.list-group-item:hover {
+    background-color: #e0e0e0; /* Cor de fundo ao passar o mouse */
+    transform: scale(1.02); /* Efeito de escala ao passar o mouse */
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Sombra ao passar o mouse */
+}
 
-        .icon {
-            margin-right: 12px;
-            color: black;
-            font-size: 1.5rem;
-        }
+.icon {
+    margin-right: 12px; /* Espaçamento à direita do ícone */
+    color: black; /* Cor do ícone */
+    font-size: 1.5rem; /* Tamanho do ícone */
+}
 
-        .modal-footer .btn-success {
-            background-color: #28a745;
-        }
+.modal-footer .btn-success {
+    background-color: #28a745; /* Cor do botão de sucesso */
+    color: white; /* Cor do texto */
+    padding: 10px 15px; /* Padding para o botão */
+    border-radius: 5px; /* Raio da borda */
+    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
+}
 
-        .modal-footer .btn-danger {
-            background-color: #dc3545;
-        }
+.modal-footer .btn-success:hover {
+    background-color: #218838; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
 
-        /* Capa do livro */
-        .livro-capa {
-            max-width: 100px;
-            max-height: 150px;
-            object-fit: cover;
-        }
+.modal-footer .btn-danger {
+    background-color: #dc3545; /* Cor do botão de perigo */
+    color: white; /* Cor do texto */
+    padding: 10px 15px; /* Padding para o botão */
+    border-radius: 5px; /* Raio da borda */
+    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
+}
 
-        /* Mensagens de status */
-        .alert-custom {
-            font-size: 1.2rem;
-            text-align: center;
-            border-radius: 5px;
-            padding: 1rem;
-        }
+.modal-footer .btn-danger:hover {
+    background-color: #c82333; /* Cor ao passar o mouse */
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
 
-        .alert-success {
-            background-color: #28a745;
-            color: white;
-        }
+/* Capa do livro */
+.livro-capa {
+    max-width: 100px; /* Largura máxima da capa do livro */
+    max-height: 150px; /* Altura máxima da capa do livro */
+    object-fit: cover; /* Ajustar imagem para cobrir o espaço */
+    border-radius: 10px; /* Raio da borda */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra da capa do livro */
+    transition: transform 0.3s ease; /* Transição suave */
+}
 
-        .alert-danger {
-            background-color: #dc3545;
-            color: white;
-        }
+.livro-capa:hover {
+    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+}
+
+/* Mensagens de status */
+.alert-custom {
+    font-size: 1.2rem; /* Tamanho da fonte */
+    text-align: center; /* Centralizar texto */
+    border-radius: 5px; /* Raio da borda */
+    padding: 1rem; /* Padding */
+    margin: 10px 0; /* Margem superior e inferior */
+}
+
+.alert-success {
+    background-color: #28a745; /* Cor de fundo para sucesso */
+    color: white; /* Cor do texto */
+}
+
+.alert-danger {
+    background-color: #dc3545; /* Cor de fundo para erro */
+    color: white; /* Cor do texto */
+}
     </style>
 </head>
 <body>
