@@ -24,13 +24,10 @@ $aluno = $result->fetch_assoc();
 if (!$aluno) {
     die('No student found with the given ID.');
 }
-?>
-<?php if (!empty($aluno['foto_perfil'])): ?>
-    <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="img-fluid profile-picture">
-<?php else: ?>
-    <p>Nenhuma foto de perfil disponível.</p>
-<?php endif; ?>
 
+// Verificando se existe uma foto de perfil, se não, mostra uma imagem padrão
+$foto_perfil = !empty($aluno['foto_perfil']) ? '/_uploads/' . $aluno['foto_perfil'] : '/_uploads/fp_alunos/imagem_cinza.png';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -53,11 +50,8 @@ if (!$aluno) {
 
         <div class="mb-3">
             <label for="foto" class="form-label">Foto de Perfil</label><br>
-            <?php if (!empty($aluno['foto_perfil'])): ?>
-                <img src="<?php echo htmlspecialchars($aluno['foto_perfil']); ?>" alt="Foto de Perfil" class="img-fluid profile-picture">
-            <?php else: ?>
-                <p>Nenhuma foto de perfil disponível.</p>
-            <?php endif; ?>
+            <!-- Verifique se o caminho está correto para a imagem -->
+            <img src="<?php echo htmlspecialchars($foto_perfil); ?>" alt="Foto de Perfil" class="img-fluid profile-picture">
         </div>
 
         <form method="POST" action="atualizar_perfil.php" enctype="multipart/form-data">

@@ -31,12 +31,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Check if file type is allowed
         $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg');
         if (in_array($fileExtension, $allowedfileExtensions)) {
-            // Directory where the file will be moved
-            $uploadFileDir = '../../library_management/_uploads/';
+            // Caminho relativo do diretório onde o arquivo será movido
+            $uploadFileDir = __DIR__ . '/../../_uploads/fp_alunos/';  // Caminho absoluto dinâmico
             $dest_path = $uploadFileDir . $newFileName;
 
+            // Garantir que o diretório de uploads existe
+            if (!is_dir($uploadFileDir)) {
+                mkdir($uploadFileDir, 0777, true); // Criar o diretório se não existir
+            }
+
+            // Mover o arquivo para o diretório de uploads
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $foto_perfil = $dest_path;
+                $foto_perfil = 'fp_alunos/' . $newFileName; // Caminho relativo ao diretório web
             } else {
                 die('There was an error moving the uploaded file.');
             }
