@@ -42,56 +42,48 @@ if (!isset($_SESSION['professor_id'])) {
             border-radius: 0 0 15px 15px;
         }
         .list-group-item {
-    transition: all 0.4s ease; /* Aumentar a duração da transição */
-    cursor: pointer;
-    background-color: #ffffff;
-    border: none;
-    color: #00796b;
-}
-
-.list-group-item:hover {
-    background-color: #00796b;
-    color: white;
-    transform: scale(1.05); /* Aumentar a escala para um efeito mais sutil */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra */
-}
-
-.list-group-item a {
-    text-decoration: none;
-    color: inherit; /* Herda a cor do item da lista */
-    display: flex;
-    align-items: center;
-    font-size: 1.1rem;
-}
-
-.list-group-item a:hover {
-    color: white; /* Cor do link ao passar o mouse */
-}
-
-.icon {
-    margin-right: 12px;
-    color: #00796b; /* Cor inicial do ícone */
-    font-size: 1.5rem;
-    transition: color 0.3s ease;
-}
-
-.list-group-item:hover .icon {
-    color: white; /* Mantém o ícone visível em branco ao passar o mouse */
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-    padding: 12px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Adicionar transição */
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra ao passar o mouse */
-}
-        
+            transition: all 0.4s ease; /* Aumentar a duração da transição */
+            cursor: pointer;
+            background-color: #ffffff;
+            border: none;
+            color: #00796b;
+        }
+        .list-group-item:hover {
+            background-color: #00796b;
+            color: white;
+            transform: scale(1.05); /* Aumentar a escala para um efeito mais sutil */
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra */
+        }
+        .list-group-item a {
+            text-decoration: none;
+            color: inherit; /* Herda a cor do item da lista */
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        .list-group-item a:hover {
+            color: white; /* Cor do link ao passar o mouse */
+        }
+        .icon {
+            margin-right: 12px;
+            color: #00796b; /* Cor inicial do ícone */
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+        .list-group-item:hover .icon {
+            color: white; /* Mantém o ícone visível em branco ao passar o mouse */
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Adicionar transição */
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); /* Adicionar sombra ao passar o mouse */
+        }
         .text-center {
             text-align: center;
         }
@@ -109,74 +101,89 @@ if (!isset($_SESSION['professor_id'])) {
 </head>
 <body>
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-user"></i> Bem-vindo, <?php echo $_SESSION['nome']; ?>!</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-user"></i> Bem-vindo, <?php echo $_SESSION['nome']; ?>!</h2>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-center mb-4">Acesse as opções abaixo:</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="cadastro_professor.php">
+                                    <i class="fas fa-chalkboard-teacher icon"></i> CADASTRAR PROFESSOR
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="cadastro_aluno.php">
+                                    <i class="fas fa-user-graduate icon"></i> CADASTRAR ALUNO
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="enviar_mensagem.php">
+                                    <i class="fas fa-user-graduate icon"></i> MENSAGEM
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="buscar_livros.php">
+                                    <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="cadastro_emprestimos.php">
+                                    <i class="fas fa-exchange-alt icon"></i> CRIAR EMPRÉSTIMOS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="gerenciar_emprestimos.php">
+                                    <i class="fas fa-tasks icon"></i> CRIAR EMPRÉSTIMOS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="listar_emprestimos.php">
+                                    <i class="fas fa-tasks icon"></i> EMPRÉSTIMOS REGISTADOS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="editar_livro.php">
+                                    <i class="fas fa-edit icon"></i> EDITAR LIVRO
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="visualizar_livros.php">
+                                    <i class="fas fa-eye icon"></i> VISUALIZAR LIVROS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="relatorios.php">
+                                    <i class="fas fa-file-alt icon"></i> RELATÓRIOS
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="historico_emprestimos.php">
+                                    <i class="fas fa-file-alt icon"></i> Histórico
+                                </a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="logout.php" class="btn btn-danger w-100 text-start">
+                                    <i class="fas fa-sign-out-alt icon"></i> SAIR
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h4 class="text-center mb-4">Acesse as opções abaixo:</h4>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <a href="cadastro_professor.php">
-                            <i class="fas fa-chalkboard-teacher icon"></i> CADASTRAR PROFESSOR
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="cadastro_aluno.php">
-                            <i class="fas fa-user-graduate icon"></i> CADASTRAR ALUNO
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="enviar_mensagem.php">
-                            <i class="fas fa-user-graduate icon"></i> MENSAGEM
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="buscar_livros.php">
-                            <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="cadastro_emprestimos.php">
-                            <i class="fas fa-exchange-alt icon"></i> CRIAR EMPRÉSTIMOS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="gerenciar_emprestimos.php">
-                            <i class="fas fa-tasks icon"></i> CRIAR EMPRÉSTIMOS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="listar_emprestimos.php">
-                            <i class="fas fa-tasks icon"></i> EMPRÉSTIMOS REGISTADOS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="editar_livro.php">
-                            <i class="fas fa-edit icon"></i> EDITAR LIVRO
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="visualizar_livros.php">
-                            <i class="fas fa-eye icon"></i> VISUALIZAR LIVROS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="relatorios.php">
-                            <i class="fas fa-file-alt icon"></i> RELATÓRIOS
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="historico_emprestimos.php">
-                            <i class="fas fa-file-alt icon"></i> Histórico
-                        </a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="logout.php" class="btn btn-danger w-100 text-start">
-                            <i class="fas fa-sign-out-alt icon"></i> SAIR
-                        </a>
-                    </li>
-                </ul>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Informações</h2>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="text-center">Alunos cadastrados: 100</h4>
+                        <h4 class="text-center">Livros: 250</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

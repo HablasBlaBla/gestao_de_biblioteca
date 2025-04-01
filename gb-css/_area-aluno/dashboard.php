@@ -40,59 +40,6 @@ $ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <link rel="stylesheet" href="../_css/dashboard.css">
-    <style>
-        /* Estilos para o tema escuro */
-        .dark-theme {
-            background-color: #222;
-            color: #f8f9fa;
-        }
-        .dark-theme .card {
-            background-color: #333;
-            color: #f8f9fa;
-        }
-        .dark-theme .list-group-item {
-            background-color: #444;
-            color: #f8f9fa;
-            border-color: #555;
-        }
-        .dark-theme .list-group-item a {
-            color: #f8f9fa;
-        }
-        .dark-theme .dashboard-header {
-            background-color: #333;
-        }
-        /* Animações */
-        .animate-fade-in {
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .book-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        /* Botão de tema */
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-    </style>
 </head>
 <body>
     <div class="dashboard-header">
@@ -146,7 +93,7 @@ $ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um 
                     <button type="submit" class="btn btn-primary mt-2">Pesquisar</button>
                 </form>
 
-                <div class="row" id="livros-container">
+                <div class="row">
             <?php
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
@@ -156,7 +103,7 @@ $ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um 
                     $isbn = $row['isbn'];
                     $capa_url = $row['capa_url'] ?: 'https://via.placeholder.com/100x150'; // Imagem padrão caso não tenha capa
             ?>
-                    <div class="col-md-4 mb-4 animate-fade-in">
+                    <div class="col-md-4">
                         <div class="card book-card">
                             <img src="<?php echo $capa_url; ?>" class="card-img-top" alt="Capa do livro">
                             <div class="card-body">
@@ -184,10 +131,6 @@ $ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um 
         </div>
     </div>
 
-    <button class="btn btn-primary theme-toggle" id="theme-toggle">
-        <i class="fas fa-moon"></i>
-    </button>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Adiciona animação aos elementos quando eles entram na viewport
@@ -196,75 +139,17 @@ $ja_pegou_livro = $result_emprestimo->num_rows > 0; // Verifica se já pegou um 
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.1}s`;
             });
-            
-            // Verifica se há tema salvo no localStorage
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.getElementById('theme-toggle').innerHTML = '<i class="fas fa-sun"></i>';
-            }
         });
 
-        // Adiciona interatividade aos cards de livros
-        document.querySelectorAll('.book-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'scale(1.03)';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'scale(1)';
+        // Adiciona interatividade aos cards de estatísticas
+        document.querySelectorAll('.stats-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 200);
             });
         });
-        
-        // Função para alternar o tema
-        document.getElementById('theme-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-theme');
-            
-            // Salva a preferência do usuário
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('theme', 'dark');
-                this.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                localStorage.setItem('theme', 'light');
-                this.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        });
-        
-        // Adiciona funcionalidade de pesquisa em tempo real
-        const searchInput = document.querySelector('input[name="pesquisa"]');
-        searchInput.addEventListener('input', debounce(function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            if (searchTerm.length >= 2) {
-                // Simula uma pesquisa em tempo real
-                const livrosContainer = document.getElementById('livros-container');
-                const livros = livrosContainer.querySelectorAll('.col-md-4');
-                
-                livros.forEach(livro => {
-                    const titulo = livro.querySelector('.card-title').textContent.toLowerCase();
-                    const isbn = livro.querySelector('.card-text:nth-of-type(2)').textContent.toLowerCase();
-                    
-                    if (titulo.includes(searchTerm) || isbn.includes(searchTerm)) {
-                        livro.style.display = '';
-                        livro.classList.add('highlight');
-                        setTimeout(() => {
-                            livro.classList.remove('highlight');
-                        }, 1000);
-                    } else {
-                        livro.style.display = 'none';
-                    }
-                });
-            }
-        }, 300));
-        
-        // Função de debounce para evitar muitas requisições
-        function debounce(func, wait) {
-            let timeout;
-            return function(...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
-        }
     </script>
 </body>
 </html>

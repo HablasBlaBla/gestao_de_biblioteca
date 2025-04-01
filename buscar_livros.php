@@ -1,48 +1,42 @@
 <?php
 session_start();
 
-// Verifica se o professor está logado
 if (!isset($_SESSION['professor_id'])) {
     header("Location: login.php");
     exit();
 }
 
-require 'conn.php'; // Conexão com o banco
+require 'conn.php';
 
-// Função para buscar livros na API do Google pelo título ou ISBN
 function buscarLivroGoogle($termo) {
     $url = 'https://www.googleapis.com/books/v1/volumes?q=' . urlencode($termo);
     $response = file_get_contents($url);
     return json_decode($response, true);
 }
 
-// Função para buscar detalhes do livro na API do Google
 function buscarDetalhesLivroGoogle($id_livro) {
     $url = 'https://www.googleapis.com/books/v1/volumes/' . $id_livro;
     $response = file_get_contents($url);
     return json_decode($response, true);
 }
 
-// Verifica se o formulário foi enviado para cadastrar os livros
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['livros']) && !empty($_POST['livros'])) {
         $livros_selecionados = $_POST['livros'];
         
-        // Prepara os dados para inserção no banco
         foreach ($livros_selecionados as $id_livro) {
             $livro = buscarDetalhesLivroGoogle($id_livro);
             
             $titulo = $livro['volumeInfo']['title'] ?? 'Título Desconhecido';
             $autor = isset($livro['volumeInfo']['authors']) ? implode(', ', $livro['volumeInfo']['authors']) : 'Autor Desconhecido';
             $isbn = $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] ?? 'ISBN Desconhecido';
-            $capa_url = $livro['volumeInfo']['imageLinks']['thumbnail'] ?? 'sem_capa.png';  // Imagem padrão de capa
+            $capa_url = $livro['volumeInfo']['imageLinks']['thumbnail'] ?? 'sem_capa.png';
             $descricao = $livro['volumeInfo']['description'] ?? NULL;
             $categoria = $livro['volumeInfo']['categories'][0] ?? NULL;
             $ano_publicacao = substr($livro['volumeInfo']['publishedDate'], 0, 4) ?? 'Ano não disponível';
             $genero = $livro['volumeInfo']['categories'][0] ?? 'Gênero Desconhecido';
-            $quantidade = 1; // Você pode definir uma quantidade padrão ou permitir que o professor edite isso.
+            $quantidade = 1;
             
-            // Insere o livro no banco de dados
             $sql = "INSERT INTO livros (titulo, autor, isbn, capa_url, descricao, categoria, ano_publicacao, genero, quantidade) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -54,16 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         
-        // Redireciona após o cadastro
-        header("Location: buscar_livros.php?status=success"); // Passa um parâmetro de sucesso
+        header("Location: buscar_livros.php?status=success");
         exit();
     } else {
-        header("Location: buscar_livros.php?status=fail"); // Caso contrário, falha
+        header("Location: buscar_livros.php?status=fail");
         exit();
     }
 }
 
-// Função de busca de livros
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['termo_busca'])) {
     $termo_busca = $_GET['termo_busca'];
     $livros = buscarLivroGoogle($termo_busca);
@@ -80,205 +72,425 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['termo_busca'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <style>
+        :root {
+            --primary-color: #00796b;
+            --primary-dark: #004d40;
+            --secondary-color: #26a69a;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --background-gradient: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            --card-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
         body {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Fundo suave */
-    font-family: 'Arial', sans-serif;
-    color: #212121; /* Cor do texto padrão */
-}
+            background: var(--background-gradient);
+            font-family: 'Arial', sans-serif;
+            color: #212121;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
 
-.card {
-    border-radius: 15px; /* Raio da borda */
-    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1); /* Sombra mais profunda */
-    margin-bottom: 20px; /* Espaçamento entre os cartões */
-}
+        .page-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
 
-.card-header {
-    border-radius: 15px 15px 0 0; /* Raio da borda do cabeçalho */
-    background-color: #00796b; /* Cor de fundo do cabeçalho */
-    color: white; /* Cor do texto do cabeçalho */
-    padding: 1rem; /* Padding para o cabeçalho */
-}
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
 
-.card-header h2 {
-    font-size: 1.8rem; /* Tamanho da fonte do cabeçalho */
-    font-weight: bold; /* Negrito */
-    margin: 0; /* Remover margens */
-}
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
 
-.card-body {
-    padding: 2rem; /* Padding para o corpo do cartão */
-}
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+        }
 
-.btn-custom {
-    background-color: #00796b; /* Cor do botão */
-    color: white; /* Cor do texto */
-    border: none; /* Remover borda */
-    padding: 12px 20px; /* Padding para o botão */
-    border-radius: 8px; /* Raio da borda */
-    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
-}
+        .card-body {
+            padding: 2rem;
+        }
 
-.btn-custom:hover {
-    background-color: #005b4d; /* Cor ao passar o mouse */
-    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
-}
+        .search-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
 
-.list-group-item {
-    transition: all 0.3s ease; /* Transição suave */
-    cursor: pointer; /* Cursor de ponteiro */
-    background-color: #ffffff; /* Cor de fundo padrão */
-    border-radius: 8px; /* Raio da borda */
-    padding: 12px; /* Padding para os itens da lista */
-}
+        .form-control {
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            transition: var(--transition);
+        }
 
-.list-group-item:hover {
-    background-color: #e0e0e0; /* Cor de fundo ao passar o mouse */
-    transform: scale(1.02); /* Efeito de escala ao passar o mouse */
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Sombra ao passar o mouse */
-}
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 121, 107, 0.25);
+        }
 
-.icon {
-    margin-right: 12px; /* Espaçamento à direita do ícone */
-    color: black; /* Cor do ícone */
-    font-size: 1.5rem; /* Tamanho do ícone */
-}
+        .btn-search {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            border: none;
+            transition: var(--transition);
+        }
 
-.modal-footer .btn-success {
-    background-color: #28a745; /* Cor do botão de sucesso */
-    color: white; /* Cor do texto */
-    padding: 10px 15px; /* Padding para o botão */
-    border-radius: 5px; /* Raio da borda */
-    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
-}
+        .btn-search:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
 
-.modal-footer .btn-success:hover {
-    background-color: #218838; /* Cor ao passar o mouse */
-    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
-}
+        .livro-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+            border: 1px solid #eee;
+            display: flex;
+            align-items: start;
+            gap: 1.5rem;
+        }
 
-.modal-footer .btn-danger {
-    background-color: #dc3545; /* Cor do botão de perigo */
-    color: white; /* Cor do texto */
-    padding: 10px 15px; /* Padding para o botão */
-    border-radius: 5px; /* Raio da borda */
-    transition: background-color 0.3s, transform 0.3s; /* Transições suaves */
-}
+        .livro-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-.modal-footer .btn-danger:hover {
-    background-color: #c82333; /* Cor ao passar o mouse */
-    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
-}
+        .livro-capa {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
 
-/* Capa do livro */
-.livro-capa {
-    max-width: 100px; /* Largura máxima da capa do livro */
-    max-height: 150px; /* Altura máxima da capa do livro */
-    object-fit: cover; /* Ajustar imagem para cobrir o espaço */
-    border-radius: 10px; /* Raio da borda */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Sombra da capa do livro */
-    transition: transform 0.3s ease; /* Transição suave */
-}
+        .livro-capa:hover {
+            transform: scale(1.05);
+        }
 
-.livro-capa:hover {
-    transform: scale(1.05); /* Efeito de escala ao passar o mouse */
-}
+        .livro-info {
+            flex: 1;
+        }
 
-/* Mensagens de status */
-.alert-custom {
-    font-size: 1.2rem; /* Tamanho da fonte */
-    text-align: center; /* Centralizar texto */
-    border-radius: 5px; /* Raio da borda */
-    padding: 1rem; /* Padding */
-    margin: 10px 0; /* Margem superior e inferior */
-}
+        .livro-titulo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
 
-.alert-success {
-    background-color: #28a745; /* Cor de fundo para sucesso */
-    color: white; /* Cor do texto */
-}
+        .livro-autor {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
 
-.alert-danger {
-    background-color: #dc3545; /* Cor de fundo para erro */
-    color: white; /* Cor do texto */
-}
+        .livro-isbn {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .checkbox-wrapper {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--primary-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .custom-checkbox:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: bold;
+            animation: slideDown 0.5s ease;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            border: none;
+        }
+
+        .modal-footer {
+            border-top: none;
+            padding: 1.5rem;
+        }
+
+        .btn-modal {
+            padding: 0.8rem 2rem;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .btn-modal:hover {
+            transform: translateY(-2px);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .livro-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .livro-capa {
+                width: 100px;
+                height: 150px;
+                margin-bottom: 1rem;
+            }
+
+            .checkbox-wrapper {
+                margin-top: 0.5rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .search-form {
+                padding: 1rem;
+            }
+
+            .btn-search {
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+                color: #ffffff;
+            }
+
+            .card, .search-form, .livro-card {
+                background-color: #333333;
+                color: #ffffff;
+            }
+
+            .form-control {
+                background-color: #404040;
+                border-color: #555555;
+                color: #ffffff;
+            }
+
+            .livro-titulo {
+                color: #26a69a;
+            }
+
+            .livro-autor, .livro-isbn {
+                color: #cccccc;
+            }
+
+            .alert-custom {
+                background-color: #404040;
+                color: #ffffff;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <?php
-        // Verifica o status para mostrar a mensagem de sucesso ou falha
-        if (isset($_GET['status'])) {
-            if ($_GET['status'] == 'success') {
-                echo '<div class="alert-custom alert-success">LIVROS CADASTRADOS COM SUCESSO</div>';
-            } elseif ($_GET['status'] == 'fail') {
-                echo '<div class="alert-custom alert-danger">LIVROS NÃO CADASTRADOS</div>';
-            }
-        }
-        ?>
+    <div class="page-header">
+        <div class="container">
+            <h1 class="text-center mb-0">
+                <i class="fas fa-book"></i> Sistema de Busca e Cadastro de Livros
+            </h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <?php if (isset($_GET['status'])): ?>
+            <div class="alert-custom <?php echo $_GET['status'] == 'success' ? 'alert-success' : 'alert-danger'; ?>">
+                <?php echo $_GET['status'] == 'success' ? 
+                    '<i class="fas fa-check-circle"></i> Livros cadastrados com sucesso!' : 
+                    '<i class="fas fa-exclamation-circle"></i> Erro ao cadastrar livros.'; ?>
+            </div>
+        <?php endif; ?>
 
         <div class="card">
-            <div class="card-header text-center">
-                <h2><i class="fas fa-book"></i> Buscar e Cadastrar Livros</h2>
+            <div class="card-header">
+                <h2 class="text-center mb-0">
+                    <i class="fas fa-search"></i> Buscar Livros
+                </h2>
             </div>
             <div class="card-body">
-                <!-- Formulário de busca -->
-                <form method="GET" action="buscar_livros.php">
-                    <div class="mb-3">
-                        <label for="termo_busca" class="form-label">Digite o ISBN ou Título do livro</label>
-                        <input type="text" class="form-control" name="termo_busca" required>
+                <form method="GET" action="buscar_livros.php" class="search-form">
+                    <div class="row align-items-end">
+                        <div class="col-md-9">
+                            <label for="termo_busca" class="form-label">
+                                <i class="fas fa-keyboard"></i> Digite o ISBN ou Título do livro
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   name="termo_busca" 
+                                   id="termo_busca"
+                                   placeholder="Ex: 9788535902775 ou Dom Casmurro"
+                                   required>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-search w-100">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-custom w-100">Buscar</button>
                 </form>
 
+                <div id="loading" class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Buscando livros...</p>
+                </div>
+
                 <?php if (isset($livros) && isset($livros['items'])): ?>
-                    <h5 class="mt-4">Resultados da Pesquisa</h5>
                     <form id="formCadastro" method="POST" action="buscar_livros.php">
-                        <ul class="list-group mt-3">
-                            <?php foreach ($livros['items'] as $livro): ?>
-                                <?php
-                                $id = $livro['id'];
-                                $titulo = $livro['volumeInfo']['title'] ?? 'Título Desconhecido';
-                                $autores = isset($livro['volumeInfo']['authors']) ? implode(', ', $livro['volumeInfo']['authors']) : 'Autor Desconhecido';
-                                $isbn = isset($livro['volumeInfo']['industryIdentifiers'][0]['identifier']) ? $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] : 'ISBN Desconhecido';
-                                $capa_url = $livro['volumeInfo']['imageLinks']['thumbnail'] ?? 'img/sem_capa.png';  // Imagem padrão de capa
-                                ?>
-                                <li class="list-group-item">
-                                    <div class="d-flex">
-                                        <!-- Exibe a capa do livro -->
-                                        <img src="<?php echo $capa_url; ?>" alt="Capa do livro" class="livro-capa me-3">
-                                        <div>
-                                            <strong><?php echo htmlspecialchars($titulo); ?></strong>
-                                            <p><?php echo htmlspecialchars($autores); ?></p>
-                                            <p><small>ISBN: <?php echo htmlspecialchars($isbn); ?></small></p>
-                                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3>Resultados da Pesquisa</h3>
+                            <button type="button" 
+                                    class="btn btn-success" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#confirmacaoModal"
+                                    id="btnCadastrar"
+                                    disabled>
+                                <i class="fas fa-plus-circle"></i> Cadastrar Selecionados
+                            </button>
+                        </div>
+
+                        <?php foreach ($livros['items'] as $livro): ?>
+                            <?php
+                            $id = $livro['id'];
+                            $titulo = $livro['volumeInfo']['title'] ?? 'Título Desconhecido';
+                            $autores = isset($livro['volumeInfo']['authors']) ? implode(', ', $livro['volumeInfo']['authors']) : 'Autor Desconhecido';
+                            $isbn = isset($livro['volumeInfo']['industryIdentifiers'][0]['identifier']) ? $livro['volumeInfo']['industryIdentifiers'][0]['identifier'] : 'ISBN Desconhecido';
+                            $capa_url = $livro['volumeInfo']['imageLinks']['thumbnail'] ?? 'img/sem_capa.png';
+                            ?>
+                            <div class="livro-card">
+                                <img src="<?php echo $capa_url; ?>" 
+                                     alt="Capa do livro <?php echo htmlspecialchars($titulo); ?>" 
+                                     class="livro-capa">
+                                <div class="livro-info">
+                                    <h4 class="livro-titulo"><?php echo htmlspecialchars($titulo); ?></h4>
+                                    <p class="livro-autor">
+                                        <i class="fas fa-user-edit"></i> <?php echo htmlspecialchars($autores); ?>
+                                    </p>
+                                    <p class="livro-isbn">
+                                        <i class="fas fa-barcode"></i> ISBN: <?php echo htmlspecialchars($isbn); ?>
+                                    </p>
+                                    <div class="checkbox-wrapper">
+                                        <input type="checkbox" 
+                                               name="livros[]" 
+                                               value="<?php echo $id; ?>" 
+                                               class="custom-checkbox"
+                                               onchange="verificarSelecao()">
+                                        <label class="ms-2">Selecionar para cadastro</label>
                                     </div>
-                                    <input type="checkbox" name="livros[]" value="<?php echo $id; ?>" class="mt-2">
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <button type="button" class="btn btn-success mt-3 w-100" data-bs-toggle="modal" data-bs-target="#confirmacaoModal">Cadastrar Livros Selecionados</button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </form>
                 <?php elseif (isset($livros)): ?>
-                    <p class="text-warning mt-3">Nenhum livro encontrado.</p>
+                    <div class="alert alert-warning text-center">
+                        <i class="fas fa-exclamation-triangle"></i> Nenhum livro encontrado.
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 
     <!-- Modal de confirmação -->
-    <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+    <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="confirmacaoModalLabel">Confirmar Cadastro</h5>
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle"></i> Confirmar Cadastro
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    Tem certeza que deseja cadastrar os livros selecionados?
+                    <p>Tem certeza que deseja cadastrar os livros selecionados?</p>
+                    <p class="text-muted">
+                        <i class="fas fa-info-circle"></i> 
+                        Esta ação não pode ser desfeita.
+                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" id="confirmarCadastro">Confirmar Cadastro</button>
+                    <button type="button" class="btn btn-secondary btn-modal" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-success btn-modal" id="confirmarCadastro">
+                        <i class="fas fa-check"></i> Confirmar
+                    </button>
                 </div>
             </div>
         </div>
@@ -286,9 +498,32 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['termo_busca'])) {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Função para enviar o formulário quando o usuário confirmar no modal
-        document.getElementById("confirmarCadastro").addEventListener("click", function() {
-            document.getElementById("formCadastro").submit();
+        // Habilitar/desabilitar botão de cadastro baseado na seleção
+        function verificarSelecao() {
+            const checkboxes = document.querySelectorAll('input[name="livros[]"]');
+            const btnCadastrar = document.getElementById('btnCadastrar');
+            const selecionados = Array.from(checkboxes).some(cb => cb.checked);
+            btnCadastrar.disabled = !selecionados;
+        }
+
+        // Mostrar loading durante a busca
+        document.querySelector('form[action="buscar_livros.php"]').addEventListener('submit', function() {
+            document.getElementById('loading').style.display = 'block';
+        });
+
+        // Confirmar cadastro
+        document.getElementById('confirmarCadastro').addEventListener('click', function() {
+            document.getElementById('formCadastro').submit();
+        });
+
+        // Animação suave ao scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 </body>
