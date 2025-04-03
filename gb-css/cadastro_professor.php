@@ -107,6 +107,66 @@ $conn->close();
             background-color: var(--hover-color);
         }
 
+        .card {
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            margin-bottom: 2rem;
+            border: none;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+            background-color: white;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .list-group-item {
+            transition: var(--transition);
+            cursor: pointer;
+            background-color: #ffffff;
+            border: none;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            border-radius: 10px !important;
+            padding: 1rem;
+        }
+
+        .list-group-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .list-group-item a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .icon {
+            margin-right: 12px;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
         @media (max-width: 576px) {
             .container {
                 padding: 15px;
@@ -118,7 +178,7 @@ $conn->close();
 
     <div class="container mt-5">
         <div class="card">
-            <div class="card-header bg-primary text-white text-center">
+            <div class="card-header">
                 <h4>Cadastro de Professor</h4>
             </div>
             <div class="card-body">
