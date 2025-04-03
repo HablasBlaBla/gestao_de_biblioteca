@@ -1,58 +1,5 @@
 <?php
-session_start();
-
-// Verifica se o professor está logado
-if (!isset($_SESSION['professor_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-require 'conn.php'; // Arquivo de conexão com o banco
-
-// Verifica se o ID foi passado pela URL
-if (!isset($_GET['id'])) {
-    header("Location: visualizar_livros.php");
-    exit();
-}
-
-$id = $_GET['id'];
-
-// Busca os dados do livro a ser editado
-$sql = "SELECT * FROM livros WHERE id = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows === 0) {
-    echo "<div class='alert alert-danger'>Livro não encontrado!</div>";
-    exit();
-}
-
-$livro = $result->fetch_assoc();
-
-// Verifica se o formulário foi enviado
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $titulo = $_POST['titulo'];
-    $autor = $_POST['autor'];
-    $ano_publicacao = $_POST['ano_publicacao'];
-    $genero = $_POST['genero'];
-    $isbn = $_POST['isbn'];
-    $quantidade = $_POST['quantidade'];
-
-    // Atualiza o livro no banco de dados
-    $sql_update = "UPDATE livros SET titulo = ?, autor = ?, ano_publicacao = ?, genero = ?, isbn = ?, quantidade = ? WHERE id = ?";
-    $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->bind_param("ssssssi", $titulo, $autor, $ano_publicacao, $genero, $isbn, $quantidade, $id);
-
-    if ($stmt_update->execute()) {
-        echo "<div class='alert alert-success'>Livro atualizado com sucesso!</div>";
-    } else {
-        echo "<div class='alert alert-danger'>Erro ao atualizar o livro!</div>";
-    }
-}
-
-$stmt->close();
+include('../_BACK-END/editar_livro.php')
 ?>
 
 <!DOCTYPE html>
@@ -64,49 +11,8 @@ $stmt->close();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
-    <style>
-        body {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            font-family: 'Arial', sans-serif;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            border-radius: 15px 15px 0 0;
-            background-color: #007bff;
-            color: white;
-            text-align: center;
-        }
-        .card-body {
-            padding: 2rem;
-        }
-        .form-control {
-            border-radius: 10px;
-        }
-        .btn-primary {
-            border-radius: 10px;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
-            border-radius: 10px;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            color: white;
-        }
-        .list-group-item {
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .list-group-item:hover {
-            background-color: #e0e0e0;
-            transform: scale(1.02);
-        }
-    </style>
+    
+    <link rel="stylesheet" href="_css/editar_livro.css">
 </head>
 <body>
     <div class="container mt-5">

@@ -12,6 +12,8 @@ include('../_BACK-END/dashboard.php')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <link rel="stylesheet" href="_css/dashboard.css">
+    <link rel="stylesheet" href="_css/theme.css">
+    <script src="_static/theme.js"></script>
 </head>
 <body>
     <div class="dashboard-header">
@@ -86,7 +88,7 @@ include('../_BACK-END/dashboard.php')
                                 </a>
                             </li>
                             <li class="list-group-item">
-                                <a href="logout.php" class="btn btn-danger w-100 text-start">
+                                <a href="../_BACK-END/logout.php" class="btn btn-danger w-100 text-start">
                                     <i class="fas fa-sign-out-alt icon"></i> SAIR
                                 </a>
                             </li>

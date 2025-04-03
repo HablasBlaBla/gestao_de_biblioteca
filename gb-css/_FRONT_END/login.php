@@ -10,68 +10,8 @@ include('../_BACK-END/login.php')
     <title>Login de Professores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #e0f7fa; /* Fundo suave */
-            font-family: Arial, sans-serif;
-            color: #212121;
-        }
-        .form-container {
-            max-width: 500px;
-            margin: 50px auto;
-            background-color: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            color: #006064; /* Azul mais escuro */
-            font-size: 24px;
-        }
-        .form-label {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-        .form-control {
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 1rem;
-        }
-        .form-control:focus {
-            border-color: #004d40;
-            box-shadow: 0 0 8px rgba(0, 100, 64, 0.4);
-        }
-        .btn-custom {
-            background-color: #004d40;
-            color: white;
-            font-size: 1.1rem;
-            padding: 12px 20px;
-            border-radius: 8px;
-            width: 100%;
-        }
-        .btn-custom:hover {
-            background-color: #00332d;
-            transition: background-color 0.3s ease;
-        }
-        .alert-custom {
-            margin-top: 20px;
-            background-color: #c8e6c9;
-            color: #388e3c;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        .hover-effect:hover {
-            background-color: #004d40;
-            color: white;
-            transition: all 0.3s;
-        }
-        .mt-4 {
-            margin-top: 1.5rem;
-        }
-        .text-center {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="_css/login.css">
+    <link rel="stylesheet" href="_css/theme.css">
 </head>
 <body>
     <div class="container">

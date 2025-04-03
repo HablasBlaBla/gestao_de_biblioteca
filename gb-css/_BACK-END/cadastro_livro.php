@@ -3,7 +3,7 @@ session_start();
 
 // Verifica se o professor está logado
 if (!isset($_SESSION['professor_id'])) {
-    header("Location: login.php");
+    header("Location: ../_FRONT_END/login.php");
     exit();
 }
 

@@ -1,74 +1,5 @@
 <?php
-session_start();
-require 'conn.php'; // Arquivo de conexão com o banco
-
-// Verifica se o professor está logado
-if (!isset($_SESSION['professor_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// Iniciando o array de tipos dos parâmetros para bind_param
-$param_types = '';
-
-// Iniciando o array de valores para bind_param
-$param_values = [];
-
-// Construir a consulta SQL dinamicamente
-$sql = "
-    SELECT e.id, l.titulo AS livro, a.nome AS aluno, e.data_emprestimo, e.data_devolucao, e.devolvido
-    FROM emprestimos e
-    JOIN livros l ON e.livro_id = l.id
-    JOIN alunos a ON e.aluno_id = a.id
-    WHERE 1
-";
-
-// Adicionar filtros à consulta dinamicamente
-if (!empty($_GET['aluno'])) {
-    $search_aluno = $_GET['aluno'];
-    $sql .= " AND a.nome LIKE ?";
-    $param_types .= 's'; // Tipo do parâmetro: 's' (string)
-    $param_values[] = "%" . $search_aluno . "%"; // Valor do parâmetro
-}
-if (!empty($_GET['livro'])) {
-    $search_livro = $_GET['livro'];
-    $sql .= " AND l.titulo LIKE ?";
-    $param_types .= 's'; // Tipo do parâmetro: 's' (string)
-    $param_values[] = "%" . $search_livro . "%"; // Valor do parâmetro
-}
-if (!empty($_GET['estado'])) {
-    $search_estado = $_GET['estado'];
-    $sql .= " AND e.devolvido = ?";
-    $param_types .= 's'; // Tipo do parâmetro: 's' (string)
-    $param_values[] = $search_estado; // Valor do parâmetro
-}
-if (!empty($_GET['data_inicio'])) {
-    $search_data_inicio = $_GET['data_inicio'];
-    $sql .= " AND e.data_emprestimo >= ?";
-    $param_types .= 's'; // Tipo do parâmetro: 's' (string para datas)
-    $param_values[] = $search_data_inicio; // Valor do parâmetro
-}
-if (!empty($_GET['data_fim'])) {
-    $search_data_fim = $_GET['data_fim'];
-    $sql .= " AND e.data_emprestimo <= ?";
-    $param_types .= 's'; // Tipo do parâmetro: 's' (string para datas)
-    $param_values[] = $search_data_fim; // Valor do parâmetro
-}
-
-// Preparar a consulta SQL
-$stmt = $conn->prepare($sql);
-
-// Verificar se há filtros aplicados e vincular os parâmetros corretamente
-if (count($param_values) > 0) {
-    // Bind dos parâmetros dinamicamente
-    $stmt->bind_param($param_types, ...$param_values);
-}
-
-// Executar a consulta
-$stmt->execute();
-
-// Obter os resultados
-$result = $stmt->get_result();
+include('../_BACK-END/historico_emprestimos.php')
 ?>
 
 <!DOCTYPE html>
@@ -79,40 +10,7 @@ $result = $stmt->get_result();
     <title>Histórico de Empréstimos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #00796b;
-            --hover-color: #004d40;
-            --background-gradient: linear-gradient(135deg, #f0f4f8, #e0e7ff);
-            --card-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        body {
-            background: var(--background-gradient);
-            font-family: 'Arial', sans-serif;
-            color: #212121;
-        }
-
-        .container {
-            margin-top: 50px;
-        }
-
-        .card {
-            border-radius: 15px;
-            box-shadow: var(--card-shadow);
-        }
-
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .table {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="_css/historico_emprestimos.css">
 </head>
 <body>
     <div class="container mt-5">
