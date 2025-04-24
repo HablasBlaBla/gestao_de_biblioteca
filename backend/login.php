@@ -20,8 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    // Consulta verificando apenas se o usuário existe (não verificamos mais 'ativo')
-    $sql = "SELECT id, nome, senha FROM professores WHERE email = ?";
+    // Consulta verificando se o usuário existe e incluindo o campo 'admin'
+    $sql = "SELECT id, nome, senha, admin FROM professores WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -29,19 +29,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($resultado->num_rows > 0) {
         $professor = $resultado->fetch_assoc();
-        
+
         if (password_verify($senha, $professor['senha'])) {
+            // Armazena as informações do professor na sessão
             $_SESSION['professor_id'] = $professor['id'];
             $_SESSION['nome'] = $professor['nome'];
-            
-            // Registrar último login
-            $update_sql = "UPDATE professores SET ultimo_login = NOW() WHERE id = ?";
-            $update_stmt = $conn->prepare($update_sql);
-            $update_stmt->bind_param("i", $professor['id']);
-            $update_stmt->execute();
-            $update_stmt->close();
-            
-            header("Location: ../frontend/dashboard.php");
+            $_SESSION['admin'] = $professor['admin']; // Agora esta linha funcionará corretamente
+
+            // Redireciona para o painel adequado
+            if ($professor['admin'] == 1) {
+                header("Location: ../frontend/admin/dashboard.php");
+            } else {
+                header("Location: ../frontend/dashboard.php");
+            }
             exit();
         } else {
             $_SESSION['erro_login'] = "Email ou senha incorretos!";

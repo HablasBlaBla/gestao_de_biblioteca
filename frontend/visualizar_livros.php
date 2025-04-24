@@ -765,18 +765,18 @@ include('../backend/visualizar_livros.php')
             }
         }
 
+        const deleteModalElement = document.getElementById('deleteModal');
+        const deleteModal = new bootstrap.Modal(deleteModalElement);
+        const confirmButton = document.getElementById('confirmDelete');
+
+        deleteModalElement.addEventListener('hidden.bs.modal', function() {
+            confirmButton.href = '#';
+        });
+
         function confirmarExclusao(bookId, event) {
             event.preventDefault();
-            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            const confirmButton = document.getElementById('confirmDelete');
-
             confirmButton.href = 'excluir_livro.php?id=' + bookId;
-
-            modal._element.addEventListener('hidden.bs.modal', function() {
-                confirmButton.href = '#';
-            });
-
-            modal.show();
+            deleteModal.show();
         }
 
         // Animação suave ao scroll
