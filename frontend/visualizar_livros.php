@@ -4,6 +4,7 @@ include('../backend/visualizar_livros.php')
 
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -297,7 +298,8 @@ include('../backend/visualizar_livros.php')
             transition: transform 1.5s ease;
         }
 
-        .sun, .moon {
+        .sun,
+        .moon {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -339,7 +341,7 @@ include('../backend/visualizar_livros.php')
             height: 30%;
             top: 20%;
             left: 20%;
-            box-shadow: 
+            box-shadow:
                 40px -20px 0 -5px #424242,
                 60px 30px 0 -10px #424242,
                 20px 60px 0 -7px #424242,
@@ -347,8 +349,15 @@ include('../backend/visualizar_livros.php')
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            100% { transform: scale(1.1); opacity: 0.6; }
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: scale(1.1);
+                opacity: 0.6;
+            }
         }
 
         /* Floating Stars (for dark theme) */
@@ -376,8 +385,15 @@ include('../backend/visualizar_livros.php')
         }
 
         @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
+
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* Responsive Design */
@@ -385,11 +401,11 @@ include('../backend/visualizar_livros.php')
             .page-header h1 {
                 font-size: 1.8rem;
             }
-            
+
             .stats-container {
                 flex-direction: column;
             }
-            
+
             .stat-card {
                 width: 100%;
             }
@@ -399,18 +415,18 @@ include('../backend/visualizar_livros.php')
             .container {
                 padding-bottom: 100px;
             }
-            
+
             .theme-toggle {
                 bottom: 20px;
                 right: 20px;
                 width: 50px;
                 height: 50px;
             }
-            
+
             .book-card {
                 flex-direction: column;
             }
-            
+
             .book-cover {
                 width: 100%;
                 height: auto;
@@ -418,18 +434,39 @@ include('../backend/visualizar_livros.php')
                 margin-right: 0;
                 margin-bottom: 1rem;
             }
-            
+
             .book-actions {
                 flex-direction: column;
             }
-            
+
             .btn-action {
                 width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
+
+
+    <?php
+    if (isset($_SESSION['sucesso'])): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['sucesso']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php unset($_SESSION['sucesso']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['erro'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['erro']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php unset($_SESSION['erro']); ?>
+    <?php endif; ?>
+
+
     <!-- Theme Animation Overlay -->
     <div class="theme-animation" id="themeAnimation">
         <div class="sun-moon-container">
@@ -439,10 +476,10 @@ include('../backend/visualizar_livros.php')
             </div>
         </div>
     </div>
-    
+
     <!-- Floating Stars -->
     <div class="stars" id="stars"></div>
-    
+
     <!-- Theme Toggle Button -->
     <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon" id="themeIcon"></i>
@@ -487,11 +524,11 @@ include('../backend/visualizar_livros.php')
             <div class="card-body">
                 <form method="GET" action="visualizar_livros.php" class="search-container">
                     <div class="input-group">
-                        <input type="text" 
-                               name="search" 
-                               class="form-control search-input" 
-                               placeholder="Pesquisar por título ou ISBN..."
-                               value="<?php echo htmlspecialchars($search); ?>">
+                        <input type="text"
+                            name="search"
+                            class="form-control search-input"
+                            placeholder="Pesquisar por título ou ISBN..."
+                            value="<?php echo htmlspecialchars($search); ?>">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i> Buscar
                         </button>
@@ -500,13 +537,13 @@ include('../backend/visualizar_livros.php')
 
                 <div id="book-list">
                     <?php if ($result->num_rows > 0): ?>
-                        <?php while($row = $result->fetch_assoc()): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
                             <div class="book-card d-flex">
-                                <img src="<?php echo $row['capa_url'] ?: 'default-cover.jpg'; ?>" 
-                                     alt="Capa do Livro" 
-                                     class="book-cover"
-                                     loading="lazy">
-                                
+                                <img src="<?php echo $row['capa_url'] ?: 'default-cover.jpg'; ?>"
+                                    alt="Capa do Livro"
+                                    class="book-cover"
+                                    loading="lazy">
+
                                 <div class="book-info">
                                     <h3 class="book-title"><?php echo $row['titulo']; ?></h3>
                                     <p class="book-meta">
@@ -515,7 +552,7 @@ include('../backend/visualizar_livros.php')
                                     <p class="book-meta">
                                         <i class="fas fa-barcode"></i> ISBN: <?php echo $row['isbn']; ?>
                                     </p>
-                                    
+
                                     <div class="book-actions">
                                         <button class="btn btn-info btn-action" onclick="toggleDetails(<?php echo $row['id']; ?>)">
                                             <i class="fas fa-info-circle"></i> Detalhes
@@ -523,8 +560,8 @@ include('../backend/visualizar_livros.php')
                                         <a href="editar_livro.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-action">
                                             <i class="fas fa-edit"></i> Editar
                                         </a>
-                                        <a href="#" class="btn btn-danger btn-action" 
-                                           onclick="confirmarExclusao(<?php echo $row['id']; ?>)">
+                                        <a href="#" class="btn btn-danger btn-action"
+                                            onclick="confirmarExclusao(<?php echo $row['id']; ?>, event)">
                                             <i class="fas fa-trash"></i> Excluir
                                         </a>
                                     </div>
@@ -566,8 +603,8 @@ include('../backend/visualizar_livros.php')
                         }
 
                         for ($i = $start_page; $i <= $end_page; $i++): ?>
-                            <a href="?page=<?php echo $i; ?>&search=<?php echo $search; ?>" 
-                               class="btn <?php echo ($i == $page) ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                            <a href="?page=<?php echo $i; ?>&search=<?php echo $search; ?>"
+                                class="btn <?php echo ($i == $page) ? 'btn-primary' : 'btn-outline-primary'; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor;
@@ -615,6 +652,7 @@ include('../backend/visualizar_livros.php')
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Theme Toggle Functionality
@@ -624,25 +662,25 @@ include('../backend/visualizar_livros.php')
         const themeAnimation = document.getElementById('themeAnimation');
         const sunMoon = document.getElementById('sunMoon');
         const starsContainer = document.getElementById('stars');
-        
+
         // Check for saved theme preference or use preferred color scheme
-        const savedTheme = localStorage.getItem('theme') || 
-                          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        
+        const savedTheme = localStorage.getItem('theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
         // Apply saved theme
         html.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
-        
+
         // Create stars for dark theme
         createStars();
-        
+
         themeToggle.addEventListener('click', () => {
             const currentTheme = html.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
+
             // Show animation
             showThemeAnimation(newTheme);
-            
+
             // Change theme after animation
             setTimeout(() => {
                 html.setAttribute('data-theme', newTheme);
@@ -650,7 +688,7 @@ include('../backend/visualizar_livros.php')
                 localStorage.setItem('theme', newTheme);
             }, 800);
         });
-        
+
         function updateThemeIcon(theme) {
             if (theme === 'dark') {
                 themeIcon.classList.remove('fa-moon');
@@ -660,50 +698,50 @@ include('../backend/visualizar_livros.php')
                 themeIcon.classList.add('fa-moon');
             }
         }
-        
+
         function showThemeAnimation(theme) {
             themeAnimation.classList.add('active');
-            
+
             if (theme === 'dark') {
                 sunMoon.style.transform = 'rotateY(180deg)';
             } else {
                 sunMoon.style.transform = 'rotateY(0deg)';
             }
-            
+
             setTimeout(() => {
                 themeAnimation.classList.remove('active');
             }, 1500);
         }
-        
+
         function createStars() {
             const starCount = 100;
-            
+
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
-                
+
                 // Random size between 1 and 3px
                 const size = Math.random() * 2 + 1;
                 star.style.width = `${size}px`;
                 star.style.height = `${size}px`;
-                
+
                 // Random position
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
-                
+
                 // Random animation duration and delay
                 const duration = Math.random() * 5 + 3;
                 star.style.setProperty('--duration', `${duration}s`);
-                
+
                 starsContainer.appendChild(star);
             }
         }
-        
+
         // Add animation delays for stats cards
         document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
             el.style.animationDelay = `${index * 0.1 + 0.2}s`;
         });
-        
+
         // Add click animation to stats cards
         document.querySelectorAll('.stat-card').forEach(card => {
             card.addEventListener('click', function() {
@@ -717,7 +755,7 @@ include('../backend/visualizar_livros.php')
         function toggleDetails(bookId) {
             const details = document.getElementById('details-' + bookId);
             const button = event.target.closest('.btn-action');
-            
+
             if (details.style.display === 'block') {
                 details.style.display = 'none';
                 button.innerHTML = '<i class="fas fa-info-circle"></i> Detalhes';
@@ -727,15 +765,23 @@ include('../backend/visualizar_livros.php')
             }
         }
 
-        function confirmarExclusao(bookId) {
+        function confirmarExclusao(bookId, event) {
+            event.preventDefault();
             const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-            document.getElementById('confirmDelete').href = 'excluir_livro.php?id=' + bookId;
+            const confirmButton = document.getElementById('confirmDelete');
+
+            confirmButton.href = 'excluir_livro.php?id=' + bookId;
+
+            modal._element.addEventListener('hidden.bs.modal', function() {
+                confirmButton.href = '#';
+            });
+
             modal.show();
         }
 
         // Animação suave ao scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
@@ -760,6 +806,7 @@ include('../backend/visualizar_livros.php')
         });
     </script>
 </body>
+
 </html>
 
 <?php $conn->close(); ?>

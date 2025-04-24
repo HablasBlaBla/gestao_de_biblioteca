@@ -28,7 +28,7 @@ include('../backend/lista_alunos.php')
             <div class="card-body">
                 <?php
                 // Exibindo a lista de alunos cadastrados
-                require 'conn.php';
+                require '../includes/conn.php';
                 $sql = "SELECT id, nome, serie, email FROM alunos";
                 $result = $conn->query($sql);
 

@@ -7,7 +7,7 @@ if (!isset($_SESSION['professor_id'])) {
     exit();
 }
 
-require '../conn.php'; // Arquivo de conexão com o banco
+require '../includes/conn.php'; // Arquivo de conexão com o banco
 
 // Cadastro de aluno
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
