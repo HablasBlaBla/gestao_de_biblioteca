@@ -149,6 +149,7 @@
                     <button type="submit" class="btn btn-custom mt-3">
                         <i class="fas fa-user-plus me-2"></i>Cadastrar
                     </button>
+                </div>
             </form>
             <p class="text-center mt-4">Já tem uma conta? <a href="login.php" class="hover-effect"><i class="fas fa-sign-in-alt me-1"></i>Faça login aqui</a></p>
         </div>

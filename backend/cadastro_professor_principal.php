@@ -3,7 +3,36 @@ session_start();
 include '../includes/conn.php';
 
 function validarCPF($cpf) {
-    // ... (mantenha sua função existente)
+    // Remover qualquer coisa que não seja número
+    $cpf = preg_replace('/[^0-9]/', '', $cpf);
+
+    // Aqui verifica se tem 11 dígitos
+    if (strlen($cpf) != 11) {
+        return false;
+    }
+
+    // Elimina CPF inválido que tem todos os números iguais
+    if (preg_match('/(\d)\1{10}/', $cpf)){
+        return false;
+    }
+
+    // Calcula os dois dígitos verificadores
+    for ($t = 9; $t < 11; $t++) {
+        $soma = 0;
+        for($i = 0; $i < $t; $i++) {
+            $soma += $cpf[$i] * (($t + 1) - $i);
+        }
+
+        $digito = (10 * $soma) % 11;
+        $digito = ($digito == 10) ? 0 : $digito;
+
+        if($cpf[$t] != $digito) {
+            return false;
+        }
+    }
+
+    // Se passou por tudo, o CPF é válido
+    return true;
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
