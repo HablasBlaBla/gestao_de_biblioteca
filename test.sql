@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 24/04/2025 às 14:21
+-- Host: localhost
+-- Tempo de geração: 26/04/2025 às 23:38
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Versão do PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,17 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `test`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `admin_settings`
+--
+
+CREATE TABLE `admin_settings` (
+  `id` int(11) NOT NULL,
+  `secret_code` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -110,21 +121,29 @@ CREATE TABLE `professores` (
   `senha` varchar(255) NOT NULL,
   `data_cadastro` datetime DEFAULT current_timestamp(),
   `ultimo_login` datetime DEFAULT NULL,
-  `ativo` tinyint(1) DEFAULT 1
+  `ativo` tinyint(1) DEFAULT 1,
+  `admin` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `professores`
 --
 
-INSERT INTO `professores` (`id`, `nome`, `email`, `cpf`, `senha`, `data_cadastro`, `ultimo_login`, `ativo`) VALUES
-(1, 'Fernando', 'franciolliProfessor@gmail.com', '991199922', '756d66730dc2220bfb275cc759311c91', '2025-04-24 09:04:24', NULL, 1),
-(2, 'Marques', 'marquesteste1@gmail.com', '12345678901', '61a5470a80e29d48f6a48a18a6e3d6ee', '2025-04-24 09:04:24', NULL, 1),
-(3, 'marcos', 'marcosm@gmail.com', '724.940.940-97', '$2y$10$VXto/X13XvtQjNMAAJIv3u3ewpxFJrrz4NJ8JTo4sH2T9yw/SlwZi', '2025-04-24 09:04:24', '2025-04-24 09:04:52', 1);
+INSERT INTO `professores` (`id`, `nome`, `email`, `cpf`, `senha`, `data_cadastro`, `ultimo_login`, `ativo`, `admin`) VALUES
+(1, 'Fernando', 'franciolliProfessor@gmail.com', '991199922', '756d66730dc2220bfb275cc759311c91', '2025-04-24 09:04:24', NULL, 1, 0),
+(2, 'Marques', 'marquesteste1@gmail.com', '12345678901', '61a5470a80e29d48f6a48a18a6e3d6ee', '2025-04-24 09:04:24', NULL, 1, 0),
+(3, 'marcos', 'marcosm@gmail.com', '724.940.940-97', '$2y$10$VXto/X13XvtQjNMAAJIv3u3ewpxFJrrz4NJ8JTo4sH2T9yw/SlwZi', '2025-04-24 09:04:24', '2025-04-24 09:04:52', 1, 0),
+(4, 'alefteste1', 'alefteste1@gmail.com', '723.166.090-82', '$2y$10$aFqWlbgNXdygZipCYGJfye/ecsiwrRO0qbcjZPvGv.8B.5P7uxghS', '2025-04-26 18:36:20', NULL, 1, 0);
 
 --
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices de tabela `admin_settings`
+--
+ALTER TABLE `admin_settings`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Índices de tabela `alunos`
@@ -163,6 +182,12 @@ ALTER TABLE `professores`
 --
 
 --
+-- AUTO_INCREMENT de tabela `admin_settings`
+--
+ALTER TABLE `admin_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de tabela `alunos`
 --
 ALTER TABLE `alunos`
@@ -184,7 +209,7 @@ ALTER TABLE `livros`
 -- AUTO_INCREMENT de tabela `professores`
 --
 ALTER TABLE `professores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restrições para tabelas despejadas
