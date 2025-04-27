@@ -9,11 +9,60 @@ include('../backend/buscar_livros.php')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar Livros - Google Books</title>
+    <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="icon" href="favicon/favicon-32x32.png" type="image/x-icon">
-    <link rel="stylesheet" href="../frontend/_css/buscar_livros.css">
+    <link rel="stylesheet" href="../frontend/_css/buscar_livros.css">   
 </head>
+<style>
+    .centralizar {
+    position: relative; /* Muito importante */
+    width: 100%;
+   /* height: 200px;  Opcional, só pra visualizar melhor */
+}
+
+/* Estilo do botão */
+#voltar-painel {
+    position: absolute;
+    /*top: 50%; */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50em;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 10px;
+    border: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Hover */
+#voltar-painel:hover {
+    background-color: var(--primary-dark);
+    transform: translate(-50%, -52%); /* sobe 2% ao passar o mouse */
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    #voltar-painel {
+        width: 90%;
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #voltar-painel {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+}
+</style>
 
 <body>
     <div class="page-header">
@@ -111,7 +160,19 @@ include('../backend/buscar_livros.php')
         </div>
     </div>
 
-    <!-- Modal de confirmação -->
+    <!--link pra voltar pro painel-->
+    <div class="centralizar">
+        <div class="col-md-3">
+            <button id="voltar-painel" onclick="window.location.href='dashboard.php';">
+                <i class="fas fa-arrow-left"></i> Voltar para o Painel
+            </button>
+        </div>
+    </div>
+
+
+
+
+    <!-- modal de confirmação -->
     <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
