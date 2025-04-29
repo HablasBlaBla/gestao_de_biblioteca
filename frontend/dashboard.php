@@ -520,12 +520,12 @@ include('../backend/dashboard.php');
                                     <i class="fas fa-user-graduate icon"></i> CADASTRAR ALUNO
                                 </a>
                             </li>
-                            <li class="list-group-item animate-fade-in position-relative" style="animation-delay: 0.4s">
+                            <!-- <li class="list-group-item animate-fade-in position-relative" style="animation-delay: 0.4s">
                                 <a href="enviar_mensagen.php">
                                     <i class="fas fa-envelope icon"></i> MENSAGEM
                                     <span class="notification-badge">3</span>
                                 </a>
-                            </li>
+                            </li>-->
                             <li class="list-group-item animate-fade-in" style="animation-delay: 0.5s">
                                 <a href="buscar_livros.php">
                                     <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
