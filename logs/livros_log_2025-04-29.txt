@@ -3049,3 +3049,340 @@
 
 )
 
+2025-04-29 15:10:59 - Processando livro - Detalhes: Array
+(
+    [id] => Q6kETzYptRMC
+    [dados] => Array
+        (
+            [kind] => books#volume
+            [id] => Q6kETzYptRMC
+            [etag] => I2lFQK/oTHQ
+            [selfLink] => https://www.googleapis.com/books/v1/volumes/Q6kETzYptRMC
+            [volumeInfo] => Array
+                (
+                    [title] => O Otelo brasileiro de Machado de Assis
+                    [subtitle] => um estudo de Dom Casmurro
+                    [authors] => Array
+                        (
+                            [0] => Helen Caldwell
+                        )
+
+                    [publisher] => Atelie Editorial
+                    [publishedDate] => 2002
+                    [description] => Por muito tempo, prevaleceu nas leituras críticas de Dom Casmurro o tom malicioso sobre a personalidade de Capitu. Helena Caldwell analisa a obra-prima de Machado de Assis afastando-se dessas interpretações machistas e revelando o nexo que o escritor estabelece com Otelo, de Shakespeare. Publicado em 1960, este clássico dos estudos machadianos só foi traduzido para o português mais de quarenta anos depois, chegando agora ao leitor interessado num dos maiores artistas que o Brasil já teve.
+                    [industryIdentifiers] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [type] => ISBN_10
+                                    [identifier] => 8574800937
+                                )
+
+                            [1] => Array
+                                (
+                                    [type] => ISBN_13
+                                    [identifier] => 9788574800936
+                                )
+
+                        )
+
+                    [readingModes] => Array
+                        (
+                            [text] => 
+                            [image] => 1
+                        )
+
+                    [pageCount] => 223
+                    [printedPageCount] => 232
+                    [dimensions] => Array
+                        (
+                            [height] => 21.00 cm
+                            [width] => 14.00 cm
+                            [thickness] => 1.30 cm
+                        )
+
+                    [printType] => BOOK
+                    [categories] => Array
+                        (
+                            [0] => Literary Criticism / Books & Reading
+                            [1] => Literary Criticism / Comparative Literature
+                        )
+
+                    [averageRating] => 5
+                    [ratingsCount] => 2
+                    [maturityRating] => NOT_MATURE
+                    [allowAnonLogging] => 
+                    [contentVersion] => 6.9.5.0.preview.1
+                    [panelizationSummary] => Array
+                        (
+                            [containsEpubBubbles] => 
+                            [containsImageBubbles] => 
+                        )
+
+                    [imageLinks] => Array
+                        (
+                            [smallThumbnail] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE705Uit_EltuKvhTP14LaDFwaP1vxrOioZ_CKmtl_it1Dt6yNdgr6b3-cusDOg0GzmZ1gz1w-R-bDzXqzCAckP8k9aeJP0_h_3FK1-O7zF_ceQqIYZE5TlrGxWZOLIx0kjXZSYDu&source=gbs_api
+                            [thumbnail] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73IQVRcijtrMgFxRcuPFJcoznmMZ3w3tbQaDR_3p0VoWj5k7bW_Zaqr2PrP8YHxLhUvunJSn4MRjoxilxxFW0vrDQyqdn4d6THUy9IcZsY5mSysT2XO7_WXZv5vUWpg02uxw1go&source=gbs_api
+                            [small] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=2&edge=curl&imgtk=AFLRE710LEx94tkWpvMVY4ZwB_FwK7QAmDA9726di_3HmZ7Qgi6xegG6ZU86b6j1k7wjP6Ab_JKDZgiop3jN_FL7b5Xki5n9ve4Ah5KjIEQEndXyTgBLJsKUYKrRcZlSoqUnwbi14isK&source=gbs_api
+                            [medium] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=3&edge=curl&imgtk=AFLRE72IaKz_v-hSblgBTsTkYVktFNW247u7Hkz9gVBMILintoFY0sUy17_f_6zZgCxPZF_P8dT1QtWnGQcn-h07MrXfPzGgvbWj6_ODFIlGOr3j9so-3pkN1Nl3fYy7oPRT_osA0lZn&source=gbs_api
+                            [large] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=4&edge=curl&imgtk=AFLRE70Zs2MX8PCrfEhNsQ64GPEh9BtmsbdYRDnJ7z2mQPMwPhjIpCHLcNSq1IC-3vAhP7yKJxwskAxRv7THKZLS92KHnPoF_pK8hdXePsWiTGu5u2oE6etcZ8eXY3nXI-ah89h_aBp4&source=gbs_api
+                            [extraLarge] => http://books.google.com/books/content?id=Q6kETzYptRMC&printsec=frontcover&img=1&zoom=6&edge=curl&imgtk=AFLRE705K1p_uPh5zOhMjKl1WHEkKM_oNlEr4zwyxz2Pilw05PKZm__cjv9S_UeRxLpzmu5JVo9jkFtJKtj2kDmthwYT6TxAzmT_9xkWt8qvl4RM0rWXUbHeVQvGUjWO-MjyaVE19BBL&source=gbs_api
+                        )
+
+                    [language] => pt-BR
+                    [previewLink] => http://books.google.com.br/books?id=Q6kETzYptRMC&hl=&source=gbs_api
+                    [infoLink] => https://play.google.com/store/books/details?id=Q6kETzYptRMC&source=gbs_api
+                    [canonicalVolumeLink] => https://play.google.com/store/books/details?id=Q6kETzYptRMC
+                )
+
+            [saleInfo] => Array
+                (
+                    [country] => BR
+                    [saleability] => NOT_FOR_SALE
+                    [isEbook] => 
+                )
+
+            [accessInfo] => Array
+                (
+                    [country] => BR
+                    [viewability] => PARTIAL
+                    [embeddable] => 1
+                    [publicDomain] => 
+                    [textToSpeechPermission] => ALLOWED
+                    [epub] => Array
+                        (
+                            [isAvailable] => 
+                        )
+
+                    [pdf] => Array
+                        (
+                            [isAvailable] => 1
+                            [acsTokenLink] => http://books.google.com.br/books/download/O_Otelo_brasileiro_de_Machado_de_Assis-sample-pdf.acsm?id=Q6kETzYptRMC&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api
+                        )
+
+                    [webReaderLink] => http://play.google.com/books/reader?id=Q6kETzYptRMC&hl=&source=gbs_api
+                    [accessViewStatus] => SAMPLE
+                    [quoteSharingAllowed] => 
+                )
+
+        )
+
+)
+
+2025-04-29 15:11:00 - Processando livro - Detalhes: Array
+(
+    [id] => nY7wsCfzxM8C
+    [dados] => Array
+        (
+            [kind] => books#volume
+            [id] => nY7wsCfzxM8C
+            [etag] => kSROK+/dgcY
+            [selfLink] => https://www.googleapis.com/books/v1/volumes/nY7wsCfzxM8C
+            [volumeInfo] => Array
+                (
+                    [title] => Quincas Borba
+                    [authors] => Array
+                        (
+                            [0] => Machado de Assis
+                        )
+
+                    [publisher] => FTD Editora
+                    [publishedDate] => 2011
+                    [industryIdentifiers] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [type] => ISBN_10
+                                    [identifier] => 8532276253
+                                )
+
+                            [1] => Array
+                                (
+                                    [type] => ISBN_13
+                                    [identifier] => 9788532276254
+                                )
+
+                        )
+
+                    [readingModes] => Array
+                        (
+                            [text] => 
+                            [image] => 1
+                        )
+
+                    [pageCount] => 376
+                    [printedPageCount] => 376
+                    [dimensions] => Array
+                        (
+                            [height] => 21.00 cm
+                            [width] => 14.00 cm
+                        )
+
+                    [printType] => BOOK
+                    [maturityRating] => NOT_MATURE
+                    [allowAnonLogging] => 
+                    [contentVersion] => 0.4.4.0.preview.1
+                    [panelizationSummary] => Array
+                        (
+                            [containsEpubBubbles] => 
+                            [containsImageBubbles] => 
+                        )
+
+                    [imageLinks] => Array
+                        (
+                            [smallThumbnail] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=5&edge=curl&imgtk=AFLRE70cQaECi_7HNSxQYorRzgpi12xXxivBwsGa2IIffl1i8ELVGCkIKifpRXjGw060zg6dLQpWkxdmtuLZUhKfCw9YrTOFWIpUdl6FbOGOb_3HLJOZdty8iEcVuRmK01k_HKMQcKrZ&source=gbs_api
+                            [thumbnail] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE73XVFCYQg4BKtpDiBBu_uztwiySOUjfXLJrLCgtM6Mjep4awxcGRP8eOweRGHrJlK7g5q0oVfsr_ydDrf-qgGrUrFxzN1FUhFZ8x12wacMZTKroTMDSiFVNo8hLqrUt5E3z6rnW&source=gbs_api
+                            [small] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=2&edge=curl&imgtk=AFLRE71ACvc886XHb4wZkmuz4a6t6WE-HflZGsLr_guNsxmVdttRaG-hzr6DKNxtQFjhHjkNqMbgmj4Bl39OApbJofziYXLA3Pc2ZGSZ4gj9Tz4d2_wwVqah9GyLicvhWrfbFOycgCHl&source=gbs_api
+                            [medium] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=3&edge=curl&imgtk=AFLRE71N6wKqw1K2SFSdPNxAcfz9-NQAee480jifnuBabGutFPMZeLqbklib20BVwIvWXCwHS0-QGtZhRZ-WEMl8o9fErYo5ts6rnnTm4xf0oU1TZchda_IUMKQeLJc9Kk1KjNiY70Vj&source=gbs_api
+                            [large] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=4&edge=curl&imgtk=AFLRE71eKk7s8NuKOgoRUJ6ayczKIxi9h6ODplYC_CU_BQKZcI6o4mYRFXJQ9r6icwuFxrgvnG38oJbjzEuc_BXECyXEE8zYjqJrat8XVpuQ9dlInaqBnNp_16otqQtMAp07wo7k2M9f&source=gbs_api
+                            [extraLarge] => http://books.google.com/books/content?id=nY7wsCfzxM8C&printsec=frontcover&img=1&zoom=6&edge=curl&imgtk=AFLRE70skkkM4U9zmnHqU3z5qWU_2hBrpv_ctYqKJ1EandJYQl_jX0zl5tpDsP8656MeaN3VXAM1k_TBuirgfUr-xFlHuwVTFxTlOjq4nDp9N2Q7TJE_6RV6BTxvb0YfZYWvj5v2uewp&source=gbs_api
+                        )
+
+                    [language] => pt-BR
+                    [previewLink] => http://books.google.com.br/books?id=nY7wsCfzxM8C&hl=&source=gbs_api
+                    [infoLink] => https://play.google.com/store/books/details?id=nY7wsCfzxM8C&source=gbs_api
+                    [canonicalVolumeLink] => https://play.google.com/store/books/details?id=nY7wsCfzxM8C
+                )
+
+            [saleInfo] => Array
+                (
+                    [country] => BR
+                    [saleability] => NOT_FOR_SALE
+                    [isEbook] => 
+                )
+
+            [accessInfo] => Array
+                (
+                    [country] => BR
+                    [viewability] => PARTIAL
+                    [embeddable] => 
+                    [publicDomain] => 
+                    [textToSpeechPermission] => ALLOWED
+                    [epub] => Array
+                        (
+                            [isAvailable] => 
+                        )
+
+                    [pdf] => Array
+                        (
+                            [isAvailable] => 1
+                            [acsTokenLink] => http://books.google.com.br/books/download/Quincas_Borba-sample-pdf.acsm?id=nY7wsCfzxM8C&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api
+                        )
+
+                    [webReaderLink] => http://play.google.com/books/reader?id=nY7wsCfzxM8C&hl=&source=gbs_api
+                    [accessViewStatus] => SAMPLE
+                    [quoteSharingAllowed] => 
+                )
+
+        )
+
+)
+
+2025-04-29 15:11:01 - Processando livro - Detalhes: Array
+(
+    [id] => jmctAAAAYAAJ
+    [dados] => Array
+        (
+            [kind] => books#volume
+            [id] => jmctAAAAYAAJ
+            [etag] => vjY4ciBDOPo
+            [selfLink] => https://www.googleapis.com/books/v1/volumes/jmctAAAAYAAJ
+            [volumeInfo] => Array
+                (
+                    [title] => Capitu
+                    [subtitle] => memórias póstumas
+                    [authors] => Array
+                        (
+                            [0] => Domício Proença Filho
+                        )
+
+                    [publisher] => Artium
+                    [publishedDate] => 1998
+                    [industryIdentifiers] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [type] => ISBN_10
+                                    [identifier] => 8586039152
+                                )
+
+                            [1] => Array
+                                (
+                                    [type] => ISBN_13
+                                    [identifier] => 9788586039157
+                                )
+
+                        )
+
+                    [readingModes] => Array
+                        (
+                            [text] => 
+                            [image] => 
+                        )
+
+                    [pageCount] => 378
+                    [printedPageCount] => 494
+                    [dimensions] => Array
+                        (
+                            [height] => 21.00 cm
+                        )
+
+                    [printType] => BOOK
+                    [maturityRating] => NOT_MATURE
+                    [allowAnonLogging] => 
+                    [contentVersion] => 0.4.5.0.preview.0
+                    [panelizationSummary] => Array
+                        (
+                            [containsEpubBubbles] => 
+                            [containsImageBubbles] => 
+                        )
+
+                    [imageLinks] => Array
+                        (
+                            [smallThumbnail] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=5&imgtk=AFLRE72vd2LcsV1O3hxfAKbbHP-fe0mybF5GxXtwL0JtytHJYYHvsJR7lwcC5lL5y0beaupC9Mfe7s2BfS_3OQE80n7tNGKKWpWmd0xdHN3O418hC-DD60YEXbKDR-yiVVcrSVEvvft3&source=gbs_api
+                            [thumbnail] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-fTboxg_bDSYpYgu-_foIapjpSGgwiT0ep_X6xBf8F8vYnamIs-alXkPKO8w_pncEwyoa9BRqx5eDIrW6FDnbTbL7C1x06Ibgn091f2q3C8-qanviT49ULrub4yMZIlAQEfBA&source=gbs_api
+                            [small] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=2&imgtk=AFLRE7293TDQqRJAzIwAiqR9Yn9vR5rOYANHz-cYBLET4tIkzxRC1Xd33ln53zgsBYx5aXIWcU6EcpkVR_7cbzw1h-IRuUhWQ5KwB9wI2MEBEiUGDwAFSVdb8hgS96or79RfJvLxVM4w&source=gbs_api
+                            [medium] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=3&imgtk=AFLRE71apjaIj_eDwwsCeFYXXrZj7I95-thLSw_niUG-Gk4c4nJyiQvI2_eD2XatdW3UwHGBDo2KC_RI0AoSz6R_pE4Wl2djwAsv4QQ5CH106Ua58iSsp6G-Ql-8kcC5bF1hhgoZNbEt&source=gbs_api
+                            [large] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=4&imgtk=AFLRE70w_-IhgmypSwyyknEcN5gZv3GMekp4X26hyjLxS3FoMJKT7tKt6CxPLw1Azd5BMVRroIVQUoHedb6ImpQ6P0voOkEnt1zOne_8DE9b19Q4pmd2wrn0ZKVf0CJxNJGSx2xkdTY0&source=gbs_api
+                            [extraLarge] => http://books.google.com/books/content?id=jmctAAAAYAAJ&printsec=frontcover&img=1&zoom=6&imgtk=AFLRE70OmWm0-LxIshN3vrUx_8rYrcybQZkRNy5RWF3XIYEgO67gS1Mu1vqTcpcLNUqBJ64QW2U4fA9KVcH31TrUWgj31qVdOiY-DI9zokyAFAD56hR5PCx4t9_hc1xDlYUmi9apuYS5&source=gbs_api
+                        )
+
+                    [language] => pt-BR
+                    [previewLink] => http://books.google.com.br/books?id=jmctAAAAYAAJ&hl=&source=gbs_api
+                    [infoLink] => https://play.google.com/store/books/details?id=jmctAAAAYAAJ&source=gbs_api
+                    [canonicalVolumeLink] => https://play.google.com/store/books/details?id=jmctAAAAYAAJ
+                )
+
+            [saleInfo] => Array
+                (
+                    [country] => BR
+                    [saleability] => NOT_FOR_SALE
+                    [isEbook] => 
+                )
+
+            [accessInfo] => Array
+                (
+                    [country] => BR
+                    [viewability] => NO_PAGES
+                    [embeddable] => 
+                    [publicDomain] => 
+                    [textToSpeechPermission] => ALLOWED
+                    [epub] => Array
+                        (
+                            [isAvailable] => 
+                        )
+
+                    [pdf] => Array
+                        (
+                            [isAvailable] => 
+                        )
+
+                    [webReaderLink] => http://play.google.com/books/reader?id=jmctAAAAYAAJ&hl=&source=gbs_api
+                    [accessViewStatus] => NONE
+                    [quoteSharingAllowed] => 
+                )
+
+        )
+
+)
+

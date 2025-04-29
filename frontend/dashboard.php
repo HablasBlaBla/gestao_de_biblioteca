@@ -531,14 +531,14 @@ include('../backend/dashboard.php');
                                     <i class="fas fa-book icon"></i> BUSCAR E CADASTRAR LIVROS
                                 </a>
                             </li>
-                            <li class="list-group-item animate-fade-in" style="animation-delay: 0.6s">
+                            <!-- <li class="list-group-item animate-fade-in" style="animation-delay: 0.6s">
                                 <a href="cadastro_emprestimos.php">
                                     <i class="fas fa-exchange-alt icon"></i> CRIAR EMPRÉSTIMOS
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="list-group-item animate-fade-in" style="animation-delay: 0.7s">
                                 <a href="gerenciar_emprestimos.php">
-                                    <i class="fas fa-tasks icon"></i> GERENCIAR EMPRÉSTIMOS
+                                    <i class="fas fa-tasks icon"></i> CRIAR EMPRÉSTIMOS
                                 </a>
                             </li>
                             <li class="list-group-item animate-fade-in" style="animation-delay: 0.8s">
