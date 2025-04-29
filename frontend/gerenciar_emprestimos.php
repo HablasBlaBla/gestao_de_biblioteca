@@ -56,6 +56,7 @@ include('../backend/gerenciar_emprestimos.php')
             min-height: 100vh;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         .container {
@@ -337,6 +338,7 @@ include('../backend/gerenciar_emprestimos.php')
                 </select>
             </div>
             <button type="submit" class="btn btn-primary w-100">Registrar Empréstimo</button>
+            <a href="dashboard.php" class="btn btn-primary w-100" style="margin-top: 10px;">Voltar para o Painel do Professor</a>
         </form>
     </div>
 
