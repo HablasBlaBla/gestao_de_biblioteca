@@ -2,6 +2,18 @@
 include('../backend/visualizar_livros.php')
 ?>
 
+<?php
+// DEBUG: Verificar capas únicas
+$result->data_seek(0);
+$capas = [];
+while ($row = $result->fetch_assoc()) {
+    $capas[] = $row['capa_url'] ?: 'default-cover.jpg';
+}
+echo "<!-- Total de livros: ".$result->num_rows." -->";
+echo "<!-- Capas únicas encontradas: ".count(array_unique($capas))." -->";
+$result->data_seek(0); // Resetar novamente para o loop principal
+?>
+
 <!DOCTYPE html>
 <html lang="pt" data-theme="light">
 
@@ -537,44 +549,79 @@ include('../backend/visualizar_livros.php')
 
                 <div id="book-list">
                     <?php if ($result->num_rows > 0): ?>
-                        <?php while ($row = $result->fetch_assoc()): ?>
-                            <div class="book-card d-flex">
-                                <img src="<?php echo $row['capa_url'] ?: 'default-cover.jpg'; ?>"
-                                    alt="Capa do Livro"
-                                    class="book-cover"
-                                    loading="lazy">
+                        <?php
+                        // Criar um array para armazenar capas únicas
+                        $capasExibidas = [];
 
-                                <div class="book-info">
-                                    <h3 class="book-title"><?php echo $row['titulo']; ?></h3>
-                                    <p class="book-meta">
-                                        <i class="fas fa-user-edit"></i> <?php echo $row['autor']; ?>
-                                    </p>
-                                    <p class="book-meta">
-                                        <i class="fas fa-barcode"></i> ISBN: <?php echo $row['isbn']; ?>
-                                    </p>
+                        // Resetar o ponteiro do resultado para processar novamente
+                        $result->data_seek(0);
 
-                                    <div class="book-actions">
-                                        <button class="btn btn-info btn-action" onclick="toggleDetails(<?php echo $row['id']; ?>)">
-                                            <i class="fas fa-info-circle"></i> Detalhes
-                                        </button>
-                                        <a href="editar_livro.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-action">
-                                            <i class="fas fa-edit"></i> Editar
-                                        </a>
-                                        <a href="#" class="btn btn-danger btn-action"
-                                            onclick="confirmarExclusao(<?php echo $row['id']; ?>, event)">
-                                            <i class="fas fa-trash"></i> Excluir
-                                        </a>
-                                    </div>
+                        while ($row = $result->fetch_assoc()):
+                            $capa = $row['capa_url'] ?: 'default-cover.jpg';
 
-                                    <div class="book-details" id="details-<?php echo $row['id']; ?>">
-                                        <p><i class="fas fa-calendar"></i> <strong>Ano:</strong> <?php echo $row['ano_publicacao']; ?></p>
-                                        <p><i class="fas fa-bookmark"></i> <strong>Gênero:</strong> <?php echo $row['genero']; ?></p>
-                                        <p><i class="fas fa-align-left"></i> <strong>Descrição:</strong> <?php echo $row['descricao'] ?: 'Nenhuma descrição disponível.'; ?></p>
-                                        <p><i class="fas fa-tag"></i> <strong>Categoria:</strong> <?php echo $row['categoria'] ?: 'Não especificada'; ?></p>
-                                        <p><i class="fas fa-boxes"></i> <strong>Quantidade:</strong> <?php echo $row['quantidade']; ?></p>
+                            // Verificar se esta capa já foi processada
+                            if (!in_array($capa, $capasExibidas)):
+                                $capasExibidas[] = $capa;
+
+                                // Buscar TODAS as edições com esta capa (incluindo a atual)
+                                $sql_edicoes = "SELECT * FROM livros WHERE capa_url = ?";
+                                $stmt = $conn->prepare($sql_edicoes);
+                                $stmt->bind_param("s", $capa);
+                                $stmt->execute();
+                                $result_edicoes = $stmt->get_result();
+                                $total_edicoes = $result_edicoes->num_rows;
+                        ?>
+                                <div class="book-card d-flex">
+                                    <img src="<?php echo htmlspecialchars($capa); ?>"
+                                        alt="Capa do Livro"
+                                        class="book-cover"
+                                        loading="lazy">
+
+                                    <div class="book-info">
+                                        <h3 class="book-title"><?php echo htmlspecialchars($row['titulo']); ?></h3>
+                                        <p class="book-meta">
+                                            <i class="fas fa-user-edit"></i> <?php echo htmlspecialchars($row['autor']); ?>
+                                        </p>
+
+                                        <div class="book-actions">
+                                            <button class="btn btn-info btn-action"
+                                                onclick="toggleDetails('<?php echo md5($capa); ?>', event)">
+                                                <i class="fas fa-info-circle"></i> Ver Edições (<?php echo $total_edicoes; ?>)
+                                            </button>
+                                            <a href="editar_livro.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-action">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </a>
+                                            <button onclick="confirmarExclusao(<?php echo $row['id']; ?>, event)" class="btn btn-danger">
+                                                Excluir Livro
+                                            </button>
+                                        </div>
+
+                                        <div class="book-details" id="details-<?php echo md5($capa); ?>" style="display:none;">
+                                            <?php while ($edicao = $result_edicoes->fetch_assoc()): ?>
+                                                <div class="book-edition">
+                                                    <h4><?php echo htmlspecialchars($edicao['titulo']); ?></h4>
+                                                    <p><i class="fas fa-barcode"></i> <strong>ISBN:</strong> <?php echo htmlspecialchars($edicao['isbn']); ?></p>
+                                                    <p><i class="fas fa-calendar"></i> <strong>Ano:</strong> <?php echo htmlspecialchars($edicao['ano_publicacao']); ?></p>
+                                                    <p><i class="fas fa-bookmark"></i> <strong>Gênero:</strong> <?php echo htmlspecialchars($edicao['genero']); ?></p>
+                                                    <p><i class="fas fa-align-left"></i> <strong>Descrição:</strong> <?php echo $edicao['descricao'] ? nl2br(htmlspecialchars($edicao['descricao'])) : 'Nenhuma descrição disponível.'; ?></p>
+                                                    <p><i class="fas fa-tag"></i> <strong>Categoria:</strong> <?php echo htmlspecialchars($edicao['categoria'] ?: 'Não especificada'); ?></p>
+                                                    <p><i class="fas fa-boxes"></i> <strong>Quantidade:</strong> <?php echo htmlspecialchars($edicao['quantidade']); ?></p>
+
+                                                    <div class="edition-actions">
+                                                        <a href="editar_livro.php?id=<?php echo $edicao['id']; ?>" class="btn btn-sm btn-warning">
+                                                            <i class="fas fa-edit"></i> Editar esta edição
+                                                        </a>
+                                                        <button onclick="confirmarExclusao(<?php echo $edicao['id']; ?>, event)" class="btn btn-sm btn-danger">
+                                                            Excluir esta edição
+                                                        </button>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                            <?php endwhile; ?>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         <?php endwhile; ?>
                     <?php else: ?>
                         <div class="alert alert-info text-center">
@@ -624,187 +671,218 @@ include('../backend/visualizar_livros.php')
                         <?php endif; ?>
                     </nav>
                 <?php endif; ?>
+
+                <a href="dashboard.php" class="btn-back mb-4" id="voltar-painel">
+                    <i class="fas fa-arrow-left"></i> Voltar para o Painel do Professor
+                </a>
             </div>
-        </div>
 
-        <a href="dashboard.php" class="btn-back mb-4">
-            <i class="fas fa-arrow-left"></i> Voltar para o Painel
-        </a>
-    </div>
-
-    <!-- Modal de Confirmação de Exclusão -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirmar Exclusão</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Tem certeza que deseja excluir este livro?</p>
-                    <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a href="#" id="confirmDelete" class="btn btn-danger">Confirmar Exclusão</a>
+            <!-- Modal de Confirmação de Exclusão -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirmar Exclusão</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tem certeza que deseja excluir este livro?</p>
+                            <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <a href="#" id="confirmDelete" class="btn btn-danger">Confirmar Exclusão</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const html = document.documentElement;
-        const themeAnimation = document.getElementById('themeAnimation');
-        const sunMoon = document.getElementById('sunMoon');
-        const starsContainer = document.getElementById('stars');
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                function toggleDetails(capaHash, event) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
-        // Check for saved theme preference or use preferred color scheme
-        const savedTheme = localStorage.getItem('theme') ||
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    const detailsElement = document.getElementById(`details-${capaHash}`);
+                    const button = event.currentTarget;
 
-        // Apply saved theme
-        html.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
+                    if (!detailsElement || !button) {
+                        console.error('Elementos não encontrados para:', capaHash);
+                        return;
+                    }
 
-        // Create stars for dark theme
-        createStars();
+                    // Alternar visibilidade
+                    const isShowing = detailsElement.style.display === 'block';
+                    detailsElement.style.display = isShowing ? 'none' : 'block';
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                    // Atualizar ícone e acessibilidade
+                    if (isShowing) {
+                        button.innerHTML = '<i class="fas fa-info-circle"></i> Ver Edições';
+                        button.setAttribute('aria-expanded', 'false');
+                        button.classList.remove('active');
+                    } else {
+                        button.innerHTML = '<i class="fas fa-times-circle"></i> Fechar Edições';
+                        button.setAttribute('aria-expanded', 'true');
+                        button.classList.add('active');
+                    }
+                }
 
-            // Show animation
-            showThemeAnimation(newTheme);
+                // 2. Variáveis globais
+                // Mantendo suas outras funções globais
+                let deleteModal;
+                let confirmButton;
 
-            // Change theme after animation
-            setTimeout(() => {
-                html.setAttribute('data-theme', newTheme);
-                updateThemeIcon(newTheme);
-                localStorage.setItem('theme', newTheme);
-            }, 800);
-        });
+                window.confirmarExclusao = function(bookId, event) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
-        function updateThemeIcon(theme) {
-            if (theme === 'dark') {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-        }
+                    if (!deleteModal || !confirmButton) {
+                        console.error("Modal não inicializado. Verifique:");
+                        console.error("- O Bootstrap está carregado?");
+                        console.error("- O modal existe no DOM?");
+                        return;
+                    }
 
-        function showThemeAnimation(theme) {
-            themeAnimation.classList.add('active');
+                    confirmButton.href = `excluir_livro.php?id=${bookId}`;
+                    deleteModal.show();
+                }
 
-            if (theme === 'dark') {
-                sunMoon.style.transform = 'rotateY(180deg)';
-            } else {
-                sunMoon.style.transform = 'rotateY(0deg)';
-            }
+                document.addEventListener('DOMContentLoaded', function() {
+                    const deleteModalElement = document.getElementById('deleteModal');
 
-            setTimeout(() => {
-                themeAnimation.classList.remove('active');
-            }, 1500);
-        }
+                    if (deleteModalElement) {
+                        deleteModal = new bootstrap.Modal(deleteModalElement);
+                        confirmButton = document.getElementById('confirmDelete');
 
-        function createStars() {
-            const starCount = 100;
-
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-
-                // Random size between 1 and 3px
-                const size = Math.random() * 2 + 1;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-
-                // Random position
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-
-                // Random animation duration and delay
-                const duration = Math.random() * 5 + 3;
-                star.style.setProperty('--duration', `${duration}s`);
-
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Add animation delays for stats cards
-        document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
-            el.style.animationDelay = `${index * 0.1 + 0.2}s`;
-        });
-
-        // Add click animation to stats cards
-        document.querySelectorAll('.stat-card').forEach(card => {
-            card.addEventListener('click', function() {
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
-            });
-        });
-
-        function toggleDetails(bookId) {
-            const details = document.getElementById('details-' + bookId);
-            const button = event.target.closest('.btn-action');
-
-            if (details.style.display === 'block') {
-                details.style.display = 'none';
-                button.innerHTML = '<i class="fas fa-info-circle"></i> Detalhes';
-            } else {
-                details.style.display = 'block';
-                button.innerHTML = '<i class="fas fa-times-circle"></i> Fechar';
-            }
-        }
-
-        const deleteModalElement = document.getElementById('deleteModal');
-        const deleteModal = new bootstrap.Modal(deleteModalElement);
-        const confirmButton = document.getElementById('confirmDelete');
-
-        deleteModalElement.addEventListener('hidden.bs.modal', function() {
-            confirmButton.href = '#';
-        });
-
-        function confirmarExclusao(bookId, event) {
-            event.preventDefault();
-            confirmButton.href = 'excluir_livro.php?id=' + bookId;
-            deleteModal.show();
-        }
-
-        // Animação suave ao scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Lazy loading para imagens
-        document.addEventListener('DOMContentLoaded', function() {
-            const images = document.querySelectorAll('img[loading="lazy"]');
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        observer.unobserve(img);
+                        deleteModalElement.addEventListener('hidden.bs.modal', () => {
+                            if (confirmButton) confirmButton.href = '#';
+                        });
                     }
                 });
-            });
 
-            images.forEach(img => imageObserver.observe(img));
-        });
-    </script>
+                // Adicione esta função junto com as outras no seu JavaScript
+                function toggleDetails(bookId, event) {
+                    event.preventDefault();
+
+                    // Encontra os elementos relevantes
+                    const detailsElement = document.getElementById(`details-${bookId}`);
+                    const button = event.currentTarget;
+
+                    // Verifica se os elementos existem
+                    if (!detailsElement || !button) {
+                        console.error('Elementos não encontrados para:', bookId);
+                        return;
+                    }
+
+                    // Alterna a visibilidade
+                    if (detailsElement.style.display === 'none' || !detailsElement.style.display) {
+                        detailsElement.style.display = 'block';
+                        button.innerHTML = '<i class="fas fa-times-circle"></i> Fechar';
+                    } else {
+                        detailsElement.style.display = 'none';
+                        button.innerHTML = '<i class="fas fa-info-circle"></i> Detalhes';
+                    }
+                }
+
+
+                // Theme Toggle Functionality
+                const themeToggle = document.getElementById('themeToggle');
+                const themeIcon = document.getElementById('themeIcon');
+                const html = document.documentElement;
+                const themeAnimation = document.getElementById('themeAnimation');
+                const sunMoon = document.getElementById('sunMoon');
+                const starsContainer = document.getElementById('stars');
+
+                // Check for saved theme preference or use preferred color scheme
+                const savedTheme = localStorage.getItem('theme') ||
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+                // Apply saved theme
+                html.setAttribute('data-theme', savedTheme);
+                updateThemeIcon(savedTheme);
+
+                // Create stars for dark theme
+                createStars();
+
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = html.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+                    // Show animation
+                    showThemeAnimation(newTheme);
+
+                    // Change theme after animation
+                    setTimeout(() => {
+                        html.setAttribute('data-theme', newTheme);
+                        updateThemeIcon(newTheme);
+                        localStorage.setItem('theme', newTheme);
+                    }, 800);
+                });
+
+                function updateThemeIcon(theme) {
+                    if (theme === 'dark') {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                    }
+                }
+
+                function showThemeAnimation(theme) {
+                    themeAnimation.classList.add('active');
+
+                    if (theme === 'dark') {
+                        sunMoon.style.transform = 'rotateY(180deg)';
+                    } else {
+                        sunMoon.style.transform = 'rotateY(0deg)';
+                    }
+
+                    setTimeout(() => {
+                        themeAnimation.classList.remove('active');
+                    }, 1500);
+                }
+
+                function createStars() {
+                    const starCount = 100;
+
+                    for (let i = 0; i < starCount; i++) {
+                        const star = document.createElement('div');
+                        star.classList.add('star');
+
+                        // Random size between 1 and 3px
+                        const size = Math.random() * 2 + 1;
+                        star.style.width = `${size}px`;
+                        star.style.height = `${size}px`;
+
+                        // Random position
+                        star.style.left = `${Math.random() * 100}%`;
+                        star.style.top = `${Math.random() * 100}%`;
+
+                        // Random animation duration and delay
+                        const duration = Math.random() * 5 + 3;
+                        star.style.setProperty('--duration', `${duration}s`);
+
+                        starsContainer.appendChild(star);
+                    }
+                }
+
+                // Add animation delays for stats cards
+                document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
+                    el.style.animationDelay = `${index * 0.1 + 0.2}s`;
+                });
+
+                // Add click animation to stats cards
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        this.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            this.style.transform = '';
+                        }, 200);
+                    });
+                });
+            </script>
 </body>
 
 </html>

@@ -17,10 +17,10 @@ if (isset($_GET['search'])) {
     $search = htmlspecialchars(trim($_GET['search']));
 }
 
-$sql = "SELECT * FROM livros WHERE titulo LIKE ? OR isbn LIKE ? ORDER BY titulo ASC LIMIT $limit OFFSET $offset";
+$sql = "SELECT * FROM livros WHERE titulo LIKE ? OR isbn LIKE ? ORDER BY titulo ASC LIMIT ?, ?";
 $stmt = $conn->prepare($sql);
 $searchTerm = "%$search%";
-$stmt->bind_param('ss', $searchTerm, $searchTerm);
+$stmt->bind_param('ssii', $searchTerm, $searchTerm, $offset, $limit);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -31,4 +31,6 @@ $stmt_total->execute();
 $total_result = $stmt_total->get_result();
 $total_books = $total_result->fetch_assoc()['total'];
 $total_pages = ceil($total_books / $limit);
+
+// Aqui você pode adicionar o código para exibir os resultados e a paginação
 ?>

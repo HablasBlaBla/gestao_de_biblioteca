@@ -1,13 +1,7 @@
 <?php
 session_start();
 
-// No seu código PHP, quando identificar erro de duplicidade
-if (strpos($stmt->error, "Duplicate entry") !== false) {
-    $_SESSION['erros'] = ["$titulo: Já existe um livro com este ISBN cadastrado."];
-    header("Location: buscar_livros.php?status=duplicate");
-    exit();
-}
-
+// Verifica se o usuário está logado
 if (!isset($_SESSION['professor_id'])) {
     header("Location: login.php");
     exit();
