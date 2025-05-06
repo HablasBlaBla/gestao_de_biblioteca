@@ -52,7 +52,6 @@ CREATE TABLE `alunos` (
 --
 
 INSERT INTO `alunos` (`id`, `nome`, `serie`, `email`, `senha`, `professor_id`) VALUES
-(1, 'Alef de Souza Sobrinho', '3D', 'alefsouzasobrinho51@gmail.com', 'c024d8645565ab377d3fa52d54f543c4', NULL),
 (2, 'marcos', '3a', 'marcosaluno@gmail.com', '33a55ce3bd6606437c71a69a15cee2c6', NULL);
 
 -- --------------------------------------------------------
