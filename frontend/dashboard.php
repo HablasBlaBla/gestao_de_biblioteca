@@ -259,18 +259,18 @@ include('../backend/dashboard.php');
         }
 
         /* Animations */
-        .animate-fade-in {
+        /* .animate-fade-in {
             opacity: 0;
             transform: translateY(20px);
             animation: fadeIn 0.6s forwards;
-        }
+        } */
 
-        @keyframes fadeIn {
+        /* @keyframes fadeIn {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
+        } */
 
         /* Theme Toggle */
         .theme-toggle {
@@ -303,7 +303,7 @@ include('../backend/dashboard.php');
         }
 
         /* Theme Animation Overlay */
-        .theme-animation {
+        /* .theme-animation {
             position: fixed;
             top: 0;
             left: 0;
@@ -321,9 +321,9 @@ include('../backend/dashboard.php');
 
         .theme-animation.active {
             opacity: 1;
-        }
+        } */
 
-        .sun-moon-container {
+        /* .sun-moon-container {
             width: 200px;
             height: 200px;
             position: relative;
@@ -390,7 +390,7 @@ include('../backend/dashboard.php');
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.3; }
             100% { transform: scale(1.1); opacity: 0.6; }
-        }
+        } */
 
         /* Floating Stars (for dark theme) */
         .stars {
@@ -478,14 +478,14 @@ include('../backend/dashboard.php');
 </head>
 <body>
     <!-- Theme Animation Overlay -->
-    <div class="theme-animation" id="themeAnimation">
+    <!-- <div class="theme-animation" id="themeAnimation">
         <div class="sun-moon-container">
             <div class="sun-moon" id="sunMoon">
                 <div class="sun"></div>
                 <div class="moon"></div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Stars for Dark Theme -->
     <div class="stars" id="stars"></div>
@@ -652,19 +652,14 @@ include('../backend/dashboard.php');
         createStars();
         
         themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Show animation
-            showThemeAnimation(newTheme);
-            
-            // Change theme after animation
-            setTimeout(() => {
-                html.setAttribute('data-theme', newTheme);
-                updateThemeIcon(newTheme);
-                localStorage.setItem('theme', newTheme);
-            }, 800);
-        });
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Mudança imediata do tema (sem delay)
+    html.setAttribute('data-theme', newTheme);
+    updateThemeIcon(newTheme);
+    localStorage.setItem('theme', newTheme);
+});
         
         function updateThemeIcon(theme) {
             if (theme === 'dark') {
@@ -676,19 +671,19 @@ include('../backend/dashboard.php');
             }
         }
         
-        function showThemeAnimation(theme) {
-            themeAnimation.classList.add('active');
+        // function showThemeAnimation(theme) {
+        //     themeAnimation.classList.add('active');
             
-            if (theme === 'dark') {
-                sunMoon.style.transform = 'rotateY(180deg)';
-            } else {
-                sunMoon.style.transform = 'rotateY(0deg)';
-            }
+        //     if (theme === 'dark') {
+        //         sunMoon.style.transform = 'rotateY(180deg)';
+        //     } else {
+        //         sunMoon.style.transform = 'rotateY(0deg)';
+        //     }
             
-            setTimeout(() => {
-                themeAnimation.classList.remove('active');
-            }, 1500);
-        }
+        //     setTimeout(() => {
+        //         themeAnimation.classList.remove('active');
+        //     }, 1500);
+        // }
         
         function createStars() {
             const starCount = 100;
@@ -715,9 +710,9 @@ include('../backend/dashboard.php');
         }
         
         // Add animation delays for stats cards
-        document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
-            el.style.animationDelay = `${index * 0.1 + 0.2}s`;
-        });
+        // document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
+        //     el.style.animationDelay = `${index * 0.1 + 0.2}s`;
+        // });
         
         // Add click animation to stats cards
         document.querySelectorAll('.stats-card').forEach(card => {
