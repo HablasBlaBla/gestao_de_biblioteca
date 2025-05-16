@@ -47,9 +47,16 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,11 +111,17 @@ def login():
         if 'conn' in locals():
             conn.close()
 
+
+
+
 @app.route('/logout')
 def logout():
     session.clear()
     flash('Você foi desconectado com sucesso.', 'info')
     return redirect(url_for('index'))
+
+
+
 
 @app.route('/dashboard')
 @login_required
@@ -143,6 +156,8 @@ def dashboard():
     finally:
         if 'conn' in locals():
             conn.close()
+
+
 
 @app.route('/admin/dashboard')
 @login_required
@@ -203,6 +218,8 @@ def validar_cpf(cpf):
         if int(cpf[t]) != digito:
             return False
     return True
+
+
 
 @app.route('/cadastro_professor_principal', methods=['GET', 'POST'])
 def cadastro_professor_principal():
